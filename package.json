@@ -1,14 +1,11 @@
 {
-"name" : "acl",
-"version" : "0.0.1",
-"author" : "Manuel Astudillo <manuel@optimalbits.com>",
-"description" : "An Access Control List module, based on Redis with Express middleware support",
-"homepage" : "https://github.com/optimalbits/node_acl",
-"repository":
-{
-	"type": "git",
-	"url": "git://github.com/optimalbits/node_acl.git",
-},
-"engines" : { "node" : "*" },
-"main" : "./index.js",
+  "name" : "acl",
+  "version" : "0.0.1",
+  "description" : "An Access Control List module, based on Redis with Express middleware support",
+  "keywords" : ["middleware","acl","web"],
+  "repository":"git://github.com/optimalbits/node_acl.git",
+  "author" : "Manuel Astudillo <manuel@optimalbits.com>",
+  "homepage" : "https://github.com/optimalbits/node_acl",
+  "engines": { "node": ">= 0.4.1"},
+  "main" : "./index.js"
 }
