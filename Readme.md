@@ -54,11 +54,11 @@ Note that the order in which you call all the functions is irrelevant (you can a
 
 Use the wildcard to give all permissions:
 
-	acl.allow('admin', ['blogs','forums'], '*'
+	acl.allow('admin', ['blogs','forums'], '*')
 
 
 Sometimes is necessary to set permissions on many different roles and resources. This would
-lead to unnecessary nested callback for handling errors. Instead use the following:
+lead to unnecessary nested callbacks for handling errors. Instead use the following:
 
 	acl.allowEx([{roles:['guest','member'], 
                     allows:[
@@ -71,6 +71,7 @@ lead to unnecessary nested callback for handling errors. Instead use the followi
                           {resources:['account','deposit'], permissions:['put','delete']}]
 				}
 				]})
+        
 (Note: allowEx will soon be deprecated and integrated in allow)
 
 
@@ -105,11 +106,11 @@ It will return an array of resource:[permissions] like this:
 
 Finally, we provide a middleware for Express for easy protection of resources. 
 
-	var restrictAccess = acl.middleware
+	acl.middleware()
 
 We can protect a resource like this:
 
-	app.put('/blogs/:id', restrictAccess, function(req, res, next){…}
+	app.put('/blogs/:id', acl.middleware(), function(req, res, next){…}
 
 The middleware will protect the resource named by *req.url*, pick the user from *req.session.userId* and check the permission for *req.method*, so the above would be equivalent to something like this:
 
@@ -118,13 +119,13 @@ The middleware will protect the resource named by *req.url*, pick the user from 
 The middleware accepts 3 optional arguments, that are useful in some situations. For example, sometimes we 
 cannot consider the whole url as the resource:
 
-	app.put('/blogs/:id/comments/:commentId', restrictAccess(3), function(req, res, next){…}
+	app.put('/blogs/:id/comments/:commentId', acl.middleware(3), function(req, res, next){…}
 
 In this case the resource will be just the three first components of the url (without the ending slash).
 
 It is also possible to add a custom userId or check for other permissions than the method:
 
-	app.put('/blogs/:id/comments/:commentId', restrictAccess(3, 'joed', 'post'), function(req, res, next){…}
+	app.put('/blogs/:id/comments/:commentId', acl.middleware(3, 'joed', 'post'), function(req, res, next){…}
 
 
 ##Tests
