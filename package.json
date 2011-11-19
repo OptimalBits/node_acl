@@ -7,5 +7,10 @@
   "author" : "Manuel Astudillo <manuel@optimalbits.com>",
   "homepage" : "https://github.com/optimalbits/node_acl",
   "engines": { "node": ">= 0.4.1"},
-  "main" : "./index.js"
+  "main" : "./index.js",
+  "dependencies": {
+    "redis": ">= 0.7.1",
+    "async": ">=0.1.15",
+    "underscore": ">= 1.2.2"
+  }
 }
