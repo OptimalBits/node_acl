@@ -2,13 +2,15 @@
 var vows = require('vows'),
   assert = require('assert'),
   client = require('redis').createClient(6379, '127.0.0.1'),
-    Step = require('../lib/step.js'),
      acl = require('../lib/acl.js'),
 
 acl = new acl(client, 'test')
 
 var suite = vows.describe('Access Control Lists')
 
+/**
+  Batch for cleaning the keys used for unit testing.
+*/
 suite.addBatch({
   'Clean up':{
     topic: function(){acl.clean(this.callback)},
@@ -18,6 +20,10 @@ suite.addBatch({
   }
 })
 
+/**
+  Batch for testing allows
+
+*/
 suite.addBatch({
   'Allow guest to view blogs':{
     topic: function(){acl.allow('guest', 'blogs', 'view', this.callback)},
@@ -93,8 +99,8 @@ suite.addBatch({
   },
   'Give role fumanchu an array of resources and permissions':{
     topic: function(){
-      acl.allowEx([{roles:'fumanchu', 
-                    allows:[
+      acl.allow([{roles:'fumanchu', 
+                  allows:[
                           {resources:'blogs', permissions:'get'},
                           {resources:['forums','news'], permissions:['get','put','delete']}
                     ]}], this.callback)},
@@ -110,6 +116,10 @@ suite.addBatch({
   },
 })
 
+/**
+  Batch for testing allowance.
+
+*/
 suite.addBatch({
   'Can joed view blogs?':{
     topic: function(){acl.isAllowed('joed', 'blogs', 'view', this.callback)},
@@ -209,11 +219,10 @@ suite.addBatch({
       assert.isNull(err)
       assert.include(permissions, 'blogs')
       assert.include(permissions.blogs, '*')
-      assert.include(permissions, 'blogs')
+      assert.include(permissions, 'forums')
       assert.include(permissions.forums, '*')
     }
   },
-  
   'Can suzanne add blogs?':{
     topic: function(){acl.isAllowed('suzanne', 'blogs', 'add', this.callback)},
     'allowed':function(err, allow){
@@ -244,4 +253,260 @@ suite.addBatch({
   },
 })
 
+/**
+  Batch for testing whatResources.
+
+*/
+suite.addBatch({
+  'What resources have "bar" some rights on?':{
+    topic: function(){acl.whatResources('bar', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.include(resources, 'blogs')
+      assert.include(resources.blogs, 'view')
+      assert.include(resources.blogs, 'delete')
+    }
+  },
+  'What resources have "bar" view right on?':{
+    topic: function(){acl.whatResources('bar', 'view', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.include(resources, 'blogs')
+    }
+  },
+  'What resources have "fumanchu" some rights on?':{
+    topic: function(){acl.whatResources('fumanchu', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.include(resources, 'blogs')
+      assert.include(resources.blogs, 'get')
+      assert.include(resources, 'forums')
+      assert.include(resources.forums, 'delete')
+      assert.include(resources.forums, 'get')
+      assert.include(resources.forums, 'put')
+      assert.include(resources.news, 'delete')
+      assert.include(resources.news, 'get')
+      assert.include(resources.news, 'put')
+    }
+  },
+  'What resources have "baz" some rights on?':{
+    topic: function(){acl.whatResources('baz', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.include(resources, 'blogs')
+      assert.include(resources.blogs, 'view')
+      assert.include(resources.blogs, 'delete')
+      assert.include(resources.blogs, 'edit')
+    }
+  }
+})
+
+/**
+  Batch for testing permissions removal.
+
+*/
+suite.addBatch({
+  'Remove get permissions from resources blogs and forums from role fumanchu':{
+    topic: function(){acl.removeAllow('fumanchu', ['blogs','forums'], 'get',this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove delete and put permissions from resource news from role fumanchu':{
+    topic: function(){acl.removeAllow('fumanchu', 'news', 'delete', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove view permissions from resource blogs from role bar':{
+    topic: function(){acl.removeAllow('bar', 'blogs', 'view', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  }
+})
+
+/**
+  Batch for testing permissions have been removed
+
+*/
+suite.addBatch({
+  'What resources have "fumanchu" some rights on after removed some of them?':{
+    topic: function(){acl.whatResources('fumanchu', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isFalse('blogs' in resources)
+      assert.include(resources, 'news')
+      assert.include(resources.news, 'get')
+      assert.include(resources.news, 'put')
+      assert.isFalse('delete' in resources.news)
+      assert.include(resources, 'forums')
+      assert.include(resources.forums, 'delete')
+      assert.include(resources.forums, 'put')
+    }
+  },
+})
+
+/**
+  Batch for testing role removal.
+
+*/
+suite.addBatch({
+  'Remove role fumanchu':{
+    topic: function(){acl.removeRole('fumanchu', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove role member':{
+    topic: function(){acl.removeRole('member', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove role foo':{
+    topic: function(){acl.removeRole('foo', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  }
+})
+
+/**
+  Batch for testing roles have been removed
+
+*/
+suite.addBatch({
+  'What resources have "fumanchu" some rights on after removed?':{
+    topic: function(){acl.whatResources('fumanchu', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isEmpty(resources)
+    }
+  },
+  'What resources have "member" some rights on after removed?':{
+    topic: function(){acl.whatResources('member', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isEmpty(resources)
+    }
+  },
+  'What permissions has harry over blogs and forums?':{
+    topic: function(){acl.allowedPermissions('jsmith', ['blogs','forums'], this.callback)},
+    'permissions':function(err, permissions){
+      assert.isNull(err)
+      assert.isEmpty(permissions.blogs)
+      assert.isEmpty(permissions.forums)
+    }
+  },
+  'What permissions has james over blogs?':{
+    topic: function(){acl.allowedPermissions('james', 'blogs', this.callback)},
+    'permissions':function(err, permissions){
+      assert.isNull(err)
+      assert.include(permissions, 'blogs')
+      assert.include(permissions.blogs, 'delete')
+    }
+  }
+})
+
+/**
+  Batch for testing resource removal.
+
+*/
+suite.addBatch({
+  'Remove resource blogs':{
+    topic: function(){acl.removeResource('blogs', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove resource news':{
+    topic: function(){acl.removeResource('users', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  }
+})
+
+
+/**
+  Batch for testing that resources have been removed
+
+*/
+suite.addBatch({
+  'What permissions has james over blogs?':{
+    topic: function(){acl.allowedPermissions('james', 'blogs', this.callback)},
+    'permissions':function(err, permissions){
+      assert.isNull(err)
+      assert.include(permissions, 'blogs')
+      assert.isEmpty(permissions.blogs)
+    }
+  },
+  'What resources have "baz" some rights on after removed blogs?':{
+    topic: function(){acl.whatResources('baz', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isEmpty(resources)
+    }
+  },
+  'What resources have "admin" some rights on after removed users resource?':{
+    topic: function(){acl.whatResources('admin', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isFalse('users' in resources)
+      assert.isFalse('blogs' in resources)
+    }
+  },
+})
+
+/**
+  Batch for testing user roles removal.
+
+*/
+suite.addBatch({
+  'Remove resource blogs':{
+    topic: function(){acl.removeUserRoles('joed','guest', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  },
+  'Remove resource news':{
+    topic: function(){acl.removeUserRoles('harry', 'admin', this.callback)},
+    'resources':function(err){
+      assert.isUndefined(err)
+    }
+  }
+})
+
+/**
+  Batch for testing that roles have been removed from users.
+
+*/
+suite.addBatch({
+  'What permissions has harry over forums?':{
+    topic: function(){acl.allowedPermissions('harry', ['forums','blogs'], this.callback)},
+    'permissions':function(err, permissions){
+      assert.isNull(err)
+      assert.isEmpty(permissions.forums)
+    }
+  },
+  'What resources have "baz" some rights on after removed blogs?':{
+    topic: function(){acl.whatResources('baz', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isEmpty(resources)
+    }
+  },
+  'What resources have "admin" some rights on after removed users resource?':{
+    topic: function(){acl.whatResources('admin', this.callback)},
+    'resources':function(err, resources){
+      assert.isNull(err)
+      assert.isFalse('users' in resources)
+      assert.isFalse('blogs' in resources)
+    }
+  },
+})
+
 suite.export(module)
+
+
