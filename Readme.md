@@ -324,9 +324,9 @@ Note: this operation is not reversible!.
 
 Middleware for express. 
 
-    numPathComponents number of components in the url to be considered part of the resource name.
-    userId the user id for the acl system (or if not specified, req.userId)
-    permissions the permissions to check for.
+    numPathComponents {Number} number of components in the url to be considered part of the resource name.
+    userId 			  {String} the user id for the acl system (or if not specified, req.userId)
+    permissions 	  {Array} the permissions to check for.
 
 ##Tests
 
