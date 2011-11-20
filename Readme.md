@@ -2,6 +2,14 @@
 
 This module provides a minimalistic ACL implementation inspired by Zend_ACL using Redis as persistent backend.
 
+When you develop a web site or application you will soon notice that sessions are not enough to protect all the 
+available resources. Avoiding that malicious users access other users content proves a much more 
+complicated task than anticipated. ACL can solve this problem in a flexible and elegant way.
+
+Create roles and assign roles to users. Sometimes it may even be useful to create one role per user, 
+to get the finest granularity possible, while in other situations you will give the *asterisk* permission 
+for admin kind of functionality.
+
 
 ##Features
 
@@ -10,14 +18,30 @@ This module provides a minimalistic ACL implementation inspired by Zend_ACL usin
 - Hierarchies
 - Resources
 - Express middleware for protecting resources.
-- Flexible API, only one function call needed to set up all permissions on all resources removes the need for nesting of asynchronous calls.
-
+- Robust implementation with good unit test coverage.
 
 ##Instalation
 
 Using npm:
 
 	npm install acl
+
+##Documentation
+
+* [addUserRoles](#addUserRoles)
+* [removeUserRoles](#removeUserRoles)
+* [userRoles](#userRoles)
+* [addRoleParents](#addRoleParents)
+* [removeRole](#removeRole)
+* [removeResource](#removeResource)
+* [allow](#allow)
+* [removeAllow](#removeAllow)
+* [allowedPermissions](#allowedPermissions)
+* [isAllowed](#isAllowed)
+* [areAnyRolesAllowed](#areAnyRolesAllowed)
+* [whatResources](#whatResources)
+* [clean](#clean)
+* [middleware](#middleware)
 
 ##Examples
 
@@ -60,7 +84,7 @@ Use the wildcard to give all permissions:
 Sometimes is necessary to set permissions on many different roles and resources. This would
 lead to unnecessary nested callbacks for handling errors. Instead use the following:
 
-	acl.allowEx([{roles:['guest','member'], 
+	acl.allow([{roles:['guest','member'], 
                     allows:[
                           {resources:'blogs', permissions:'get'},
                           {resources:['forums','news'], permissions:['get','put','delete']}]
@@ -71,10 +95,6 @@ lead to unnecessary nested callbacks for handling errors. Instead use the follow
                           {resources:['account','deposit'], permissions:['put','delete']}]
 				}
 				]})
-        
-(Note: allowEx will soon be deprecated and integrated in allow)
-
-
 
 You can check if a user has permissions to access a given resource with *isAllowed*:
 
@@ -128,6 +148,186 @@ It is also possible to add a custom userId or check for other permissions than t
 	app.put('/blogs/:id/comments/:commentId', acl.middleware(3, 'joed', 'post'), function(req, res, next){…}
 
 
+## Methods
+
+<a name="addUserRoles"/>
+### addUserRoles( userId, roles, function(err) )
+
+Adds roles to a given user id.
+
+__Arguments__
+ 
+    userId   {String} User id.
+    roles    {String|Array} Role(s) to add to the user id.
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="removeUserRoles"/>
+### removeUserRoles( userId, roles, function(err) )
+  
+Remove roles from a given user.
+
+__Arguments__
+
+    userId   {String} User id.
+    roles    {String|Array} Role(s) to remove to the user id.
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="userRoles" />
+### userRoles( userId, function(err, roles) )
+
+Return all the roles from a given user.
+
+__Arguments__
+  
+    userId   {String} User id.
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="addRoleParents" />
+### addRoleParents( role, parents, function(err) )
+
+Adds a parent or parent list to role.
+
+__Arguments__
+
+    role     {String} User id.
+    parents  {String|Array} Role(s) to remove to the user id.
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="removeRole" />
+### removeRole( role, function(err) )
+  
+Removes a role from the system.
+  
+    role     {String} Role to be removed
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="removeResource" />
+### removeResource( resource, function(err) )
+  
+Removes a resource from the system
+  
+    resource {String} Resource to be removed
+    callback {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="allow" />
+### allow( roles, resources, permissions, function(err) )
+
+Adds the given permissions to the given roles over the given resources.
+  
+    roles       {String|Array} role(s) to add permissions to.
+    resources   {String|Array} resource(s) to add permisisons to.
+    permissions {String|Array} permission(s) to add to the roles over the resources.
+    callback    {Function} Callback called when finished.
+  
+
+### allow( permissionsArray, function(err) )
+  
+    permissionsArray {Array} Array with objects expressing what permissions to give.
+       [{roles:{String|Array}, allows:[{resources:{String|Array}, permissions:{String|Array}]]
+  
+    callback         {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="removeAllow" />
+###  removeAllow( role, resources, permissions, function(err) )
+
+Remove permissions from the given roles owned by the given role.
+
+Note: we loose atomicity when removing empty role_resources.
+  
+    role        {String}
+    resources   {String|Array}
+    permissions {String|Array}
+    callback    {Function}
+
+---------------------------------------
+
+<a name="allowedPermissions" />
+### allowedPermissions( userId, resources, function(err, obj) )
+
+Returns all the allowable permissions a given user have to
+access the given resources.
+  
+It returns an array of objects where every object maps a 
+resource name to a list of permissions for that resource.
+  
+    userId    {String} User id.
+    resources {String|Array} resource(s) to ask permissions for.
+    callback  {Function} Callback called when finished.
+
+---------------------------------------
+
+<a name="isAllowed" />
+### isAllowed( userId, resource, permissions, function(err, allowed) )
+  
+Checks if the given user is allowed to access the resource for the given 
+permissions (note: it must fulfill all the permissions).
+  
+    userId      {String} User id.
+    resource    {String|Array} resource(s) to ask permissions for.
+    permissions {String|Array} asked permissions.
+    callback    {Function} Callback called wish the result.
+
+---------------------------------------
+<a name="areAnyRolesAllowed" />
+### areAnyRolesAllowed( roles, resource, permissions, function(err, allowed) )
+  
+Returns true if any of the given roles have the right permissions.
+  
+    roles       {String|Array} Role(s) to check the permissions for.
+    resource    {String} resource(s) to ask permissions for.
+    permissions {String|Array} asked permissions.
+    callback    {Function} Callback called wish the result.
+
+---------------------------------------
+<a name="whatResources" />
+### whatResources(role, function(err, {resourceName: [permissions]})
+
+Returns what resources a given role has permissions over.
+
+    role        {String|Array} Roles
+    callback    {Function} Callback called with the result.
+
+whatResources(role, permissions, function(err, resources) )
+    
+Returns what resources a role has the given permissions over.
+  
+    role        {String|Array} Roles
+    permissions {String[Array} Permissions
+    callback    {Function} Callback called wish the result.
+
+---------------------------------------
+<a name="clean" />
+### clean ()
+
+Cleans all the keys with the given prefix from redis.
+    
+Note: this operation is not reversible!.
+
+---------------------------------------
+
+<a name="middleware" />
+### middleware( [numPathComponents, userId, permissions] )
+
+Middleware for express. 
+
+    numPathComponents number of components in the url to be considered part of the resource name.
+    userId the user id for the acl system (or if not specified, req.userId)
+    permissions the permissions to check for.
+
 ##Tests
 
 Run tests with vows:
@@ -140,7 +340,6 @@ set operations that are heavily used by acl.
 
 ## Future work
 
-- Support for removing roles, users, allowances.
 - Support for denials (deny a role a given permission)
 
 
@@ -148,7 +347,7 @@ set operations that are heavily used by acl.
 
 (The MIT License)
 
-Copyright (c) 2009-2010 Manuel Astudillo <manuel@optimalbits.com>
+Copyright (c) 2011 Manuel Astudillo <manuel@optimalbits.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
