@@ -205,6 +205,8 @@ __Arguments__
 ### removeRole( role, function(err) )
   
 Removes a role from the system.
+
+__Arguments__
   
     role     {String} Role to be removed
     callback {Function} Callback called when finished.
@@ -215,6 +217,8 @@ Removes a role from the system.
 ### removeResource( resource, function(err) )
   
 Removes a resource from the system
+
+__Arguments__
   
     resource {String} Resource to be removed
     callback {Function} Callback called when finished.
@@ -225,6 +229,8 @@ Removes a resource from the system
 ### allow( roles, resources, permissions, function(err) )
 
 Adds the given permissions to the given roles over the given resources.
+
+__Arguments__
   
     roles       {String|Array} role(s) to add permissions to.
     resources   {String|Array} resource(s) to add permisisons to.
@@ -234,6 +240,8 @@ Adds the given permissions to the given roles over the given resources.
 
 ### allow( permissionsArray, function(err) )
   
+__Arguments__
+
     permissionsArray {Array} Array with objects expressing what permissions to give.
        [{roles:{String|Array}, allows:[{resources:{String|Array}, permissions:{String|Array}]]
   
@@ -247,6 +255,8 @@ Adds the given permissions to the given roles over the given resources.
 Remove permissions from the given roles owned by the given role.
 
 Note: we loose atomicity when removing empty role_resources.
+
+__Arguments__
   
     role        {String}
     resources   {String|Array}
@@ -263,6 +273,8 @@ access the given resources.
   
 It returns an array of objects where every object maps a 
 resource name to a list of permissions for that resource.
+
+__Arguments__
   
     userId    {String} User id.
     resources {String|Array} resource(s) to ask permissions for.
@@ -275,6 +287,8 @@ resource name to a list of permissions for that resource.
   
 Checks if the given user is allowed to access the resource for the given 
 permissions (note: it must fulfill all the permissions).
+
+__Arguments__
   
     userId      {String} User id.
     resource    {String|Array} resource(s) to ask permissions for.
@@ -286,6 +300,8 @@ permissions (note: it must fulfill all the permissions).
 ### areAnyRolesAllowed( roles, resource, permissions, function(err, allowed) )
   
 Returns true if any of the given roles have the right permissions.
+
+__Arguments__
   
     roles       {String|Array} Role(s) to check the permissions for.
     resource    {String} resource(s) to ask permissions for.
@@ -298,12 +314,16 @@ Returns true if any of the given roles have the right permissions.
 
 Returns what resources a given role has permissions over.
 
+__Arguments__
+
     role        {String|Array} Roles
     callback    {Function} Callback called with the result.
 
 whatResources(role, permissions, function(err, resources) )
     
 Returns what resources a role has the given permissions over.
+
+__Arguments__
   
     role        {String|Array} Roles
     permissions {String[Array} Permissions
@@ -323,6 +343,8 @@ Note: this operation is not reversible!.
 ### middleware( [numPathComponents, userId, permissions] )
 
 Middleware for express. 
+
+__Arguments__
 
     numPathComponents {Number} number of components in the url to be considered part of the resource name.
     userId 			  {String} the user id for the acl system (or if not specified, req.userId)
