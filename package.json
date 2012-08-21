@@ -12,5 +12,8 @@
     "redis": ">= 0.7.1",
     "async": ">=0.1.15",
     "underscore": ">= 1.2.2"
-  }
+  },
+  "scripts": {
+      "test": "vows --spec"
+   }
 }
