@@ -10,6 +10,9 @@ Create roles and assign roles to users. Sometimes it may even be useful to creat
 to get the finest granularity possible, while in other situations you will give the *asterisk* permission 
 for admin kind of functionality.
 
+##Status
+
+[![BuildStatus](https://secure.travis-ci.org/optimalbits/node_acl.png)](http://travis-ci.org/optimalbits/node_acl)
 
 ##Features
 
