@@ -12,7 +12,7 @@ for admin kind of functionality.
 
 ##Status
 
-[![BuildStatus](https://secure.travis-ci.org/optimalbits/node_acl.png)](http://travis-ci.org/optimalbits/node_acl)
+[![BuildStatus](https://secure.travis-ci.org/OptimalBits/node_acl.png?branch=master)](http://travis-ci.org/optimalbits/node_acl)
 
 ##Features
 
