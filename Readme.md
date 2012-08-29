@@ -13,6 +13,8 @@ for admin kind of functionality.
 A Redis and In-Memory based backends are provided, but the generic backend interface can be 
 implemented for supporting other databases.
 
+Follow [optimalbits](http://twitter.com/optimalbits) for news and updates regarding this library.
+
 ##Status
 
 [![BuildStatus](https://secure.travis-ci.org/OptimalBits/node_acl.png?branch=master)](http://travis-ci.org/optimalbits/node_acl)
