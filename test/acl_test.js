@@ -339,7 +339,6 @@ suite.addBatch({
   'What resources have "fumanchu" some rights on after removed some of them?':{
     topic: function(){acl.whatResources('fumanchu', this.callback)},
     'resources':function(err, resources){
-      console.log(resources);
       assert.isNull(err)
       assert.isFalse('blogs' in resources)
       assert.include(resources, 'news')
