@@ -1,6 +1,6 @@
 #NODE ACL - Access Control Lists for Node
 
-This module provides a minimalistic ACL implementation inspired by Zend_ACL using Redis as persistent backend.
+This module provides a minimalistic ACL implementation inspired by Zend_ACL.
 
 When you develop a web site or application you will soon notice that sessions are not enough to protect all the 
 available resources. Avoiding that malicious users access other users content proves a much more 
@@ -9,6 +9,9 @@ complicated task than anticipated. ACL can solve this problem in a flexible and 
 Create roles and assign roles to users. Sometimes it may even be useful to create one role per user, 
 to get the finest granularity possible, while in other situations you will give the *asterisk* permission 
 for admin kind of functionality.
+
+A Redis and In-Memory based backends are provided, but the generic backend interface can be 
+implemented for supporting other databases.
 
 ##Status
 
@@ -48,10 +51,13 @@ Using npm:
 
 ##Examples
 
-Create your acl module by requiring it and instantiating it with a valid node_redis instance and an optional prefix:
-
-	var acl = require('acl')
-	acl = new acl(redisClient)
+Create your acl module by requiring it and instantiating it with a valid backend instance:
+  
+	var 
+    acl = require('acl'),
+    redisBackend = require(');
+    
+  acl = new acl(new redisBackend(client);)
 
 All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
 
@@ -333,14 +339,6 @@ __Arguments__
     callback    {Function} Callback called wish the result.
 
 ---------------------------------------
-<a name="clean" />
-### clean ()
-
-Cleans all the keys with the given prefix from redis.
-    
-Note: this operation is not reversible!.
-
----------------------------------------
 
 <a name="middleware" />
 ### middleware( [numPathComponents, userId, permissions] )
@@ -358,10 +356,6 @@ __Arguments__
 Run tests with vows:
  	vows test/*
 
-##Persistence
-
-Currently the persistence is achieved using redis, which was chosen due to its excellent support for
-set operations that are heavily used by acl. 
 
 ## Future work
 
