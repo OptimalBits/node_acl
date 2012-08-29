@@ -2,18 +2,23 @@
 var vows = require('vows'),
   assert = require('assert'),
   client = require('redis').createClient(6379, '127.0.0.1'),
-     acl = require('../lib/acl.js'),
+  redisBackend = require('../lib/redis-backend'),
+  memoryBackend = require('../lib/memory-backend'),
+     acl = require('../lib/acl.js');
 
-acl = new acl(client, 'test')
+//var backend = new redisBackend(client);
+var backend = new memoryBackend();
 
-var suite = vows.describe('Access Control Lists')
+acl = new acl(backend);
+
+var suite = vows.describe('Access Control Lists');
 
 /**
   Batch for cleaning the keys used for unit testing.
 */
 suite.addBatch({
   'Clean up':{
-    topic: function(){acl.clean(this.callback)},
+    topic: function(){backend.clean(this.callback)},
     'cleaned':function(err){
       assert.isUndefined(err)
     }
@@ -334,6 +339,7 @@ suite.addBatch({
   'What resources have "fumanchu" some rights on after removed some of them?':{
     topic: function(){acl.whatResources('fumanchu', this.callback)},
     'resources':function(err, resources){
+      console.log(resources);
       assert.isNull(err)
       assert.isFalse('blogs' in resources)
       assert.include(resources, 'news')
@@ -487,6 +493,7 @@ suite.addBatch({
     topic: function(){acl.allowedPermissions('harry', ['forums','blogs'], this.callback)},
     'permissions':function(err, permissions){
       assert.isNull(err)
+      assert.isObject(permissions)
       assert.isEmpty(permissions.forums)
     }
   },
