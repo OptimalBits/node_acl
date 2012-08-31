@@ -55,11 +55,13 @@ Using npm:
 
 Create your acl module by requiring it and instantiating it with a valid backend instance:
   
-	var 
-    acl = require('acl'),
-    redisBackend = require(');
+    var acl = require('acl');
     
-  acl = new acl(new redisBackend(client);)
+    // Using redis backend
+    acl = new acl(new acl.redisBackend(client));
+    
+    // Or Using the memory backend
+    acl = new acl(new acl.memoryBackend());
 
 All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
 
