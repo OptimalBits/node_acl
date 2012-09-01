@@ -256,6 +256,20 @@ suite.addBatch({
       assert.isTrue(allow)
     }
   },
+  'Can nobody view blogs?':{
+    topic: function(){acl.isAllowed('nobody', 'blogs', 'view', this.callback)},
+    'allowed':function(err, allow){
+      assert.isNull(err)
+      assert.isFalse(allow)
+    }
+  },
+  'Can nobody view nothing?':{
+    topic: function(){acl.isAllowed('nobody', 'nothing', 'view', this.callback)},
+    'allowed':function(err, allow){
+      assert.isNull(err)
+      assert.isFalse(allow)
+    }
+  },
 })
 
 /**
