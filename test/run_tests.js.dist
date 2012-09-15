@@ -1,0 +1,13 @@
+// rename this file to run_tests.js, uncomment the lines containing the tests
+// you wish to run and edit the connection details
+
+var testBackend = require('./acl_test').testBackend;
+
+/* memory */
+//testBackend("memory");
+
+/* redis */
+//testBackend("redis", { host:'127.0.0.1', port:6379} );
+
+/* MongoDB */
+//testBackend("mongodb", "mongodb://user:pass@server.mongohq.com:port_name/db_name");
