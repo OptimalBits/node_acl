@@ -1,14 +1,42 @@
 
 var vows = require('vows'),
   assert = require('assert'),
-  client = require('redis').createClient(6379, '127.0.0.1'),
-  redisBackend = require('../lib/redis-backend'),
-  memoryBackend = require('../lib/memory-backend'),
-     acl = require('../lib/acl.js');
+  acl = require('../lib/acl.js');
 
-//var backend = new redisBackend(client);
-var backend = new memoryBackend();
+// run tests according to different backends
+function testBackend(type,options){
+  switch(type)
+  {
+    case "memory":
+      var memoryBackend = require('../lib/memory-backend');
+      console.log("Starting Memory Backend tests"); 
+      startTests(new memoryBackend());
+      break;
+    
+    case "redis":
+      var redisBackend = require('../lib/redis-backend');
+      var client = require('redis').createClient(options.port, options.host );
+      startTests( new redisBackend(client) );    
+      break;
+      
+    case "mongodb":
+      var mongodb = require('mongodb'); 
+      var mongoDBBackend = require('../lib/mongodb-backend');
+      mongodb.Db.connect(options, function(error, db) {
+        startTests( new mongoDBBackend(db,"acl") );
+      });   
+      break;
+      
+    default: throw new Error(type + " is not a valid backend");
+  };
+}
 
+// export this
+exports.testBackend = testBackend;
+
+// start test suite
+function startTests (backend){
+  
 acl = new acl(backend);
 
 var suite = vows.describe('Access Control Lists');
@@ -527,6 +555,7 @@ suite.addBatch({
   },
 })
 
-suite.export(module)
+suite.run()
 
+}
 
