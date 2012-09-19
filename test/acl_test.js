@@ -1,29 +1,29 @@
 
 var vows = require('vows'),
   assert = require('assert'),
-  acl = require('../lib/acl.js');
+  Acl = require('../lib/acl.js');
 
 // run tests according to different backends
-function testBackend(type,options){
+function testBackend(type, options, cb){
   switch(type)
   {
     case "memory":
       var memoryBackend = require('../lib/memory-backend');
       console.log("Starting Memory Backend tests"); 
-      startTests(new memoryBackend());
+      startTests(new memoryBackend(), cb);
       break;
     
     case "redis":
       var redisBackend = require('../lib/redis-backend');
       var client = require('redis').createClient(options.port, options.host );
-      startTests( new redisBackend(client) );    
+      startTests(new redisBackend(client), cb);
       break;
       
     case "mongodb":
       var mongodb = require('mongodb'); 
       var mongoDBBackend = require('../lib/mongodb-backend');
       mongodb.Db.connect(options, function(error, client) {
-        startTests( new mongoDBBackend(client,"acl") );
+        startTests(new mongoDBBackend(client, "acl"), cb);
       });   
       break;
       
@@ -35,9 +35,9 @@ function testBackend(type,options){
 exports.testBackend = testBackend;
 
 // start test suite
-function startTests (backend){
+function startTests (backend, cb){
   
-acl = new acl(backend);
+acl = new Acl(backend);
 
 var suite = vows.describe('Access Control Lists');
 
@@ -555,7 +555,9 @@ suite.addBatch({
   },
 })
 
-suite.run()
+suite.run({reporter:require('vows/lib/vows/reporters/spec')}, function(results){
+  cb(results);
+})
 
 }
 
