@@ -11,12 +11,13 @@
   "dependencies": {
     "redis": ">= 0.7.1",
     "async": ">=0.1.15",
-    "underscore": ">= 1.2.2"
+    "underscore": ">= 1.2.2",
+    "mongodb":"*"
   },
   "devDependencies": {
       "vows": "0.6.x"
   },
   "scripts": {
-      "test": "vows --spec"
+      "test": "node test/run_tests.js"
   }
 }
