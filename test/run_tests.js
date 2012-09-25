@@ -8,17 +8,17 @@ var tests = [
   function(cb){
     console.log("Testing memory backend"); 
     testBackend("memory", {}, cb);
-  }
+  },
   
   /* Redis */
-  ,function(cb){
+  function(cb){
     console.log("Testing Redis backend"); 
     var options = { host:'127.0.0.1', port:6379, password: null};
     testBackend("redis", options, cb);
-  }
+  },
   
   /* MongoDB */
-  ,function(cb){
+  function(cb){
     console.log("Testing MongoDB backend"); 
     var url =  "mongodb://127.0.0.1:27017/acltest";
     testBackend("mongodb", url, cb);

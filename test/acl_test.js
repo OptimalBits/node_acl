@@ -26,8 +26,8 @@ function testBackend(type, options, cb){
     case "mongodb":
       var mongodb = require('mongodb'); 
       var mongoDBBackend = require('../lib/mongodb-backend');
-      mongodb.Db.connect(options, function(error, client) {
-        startTests(new mongoDBBackend(client, "acl"), cb);
+      mongodb.connect(options,function(error, db) {
+        startTests(new mongoDBBackend(db, "acl"), cb);
       });   
       break;
       
