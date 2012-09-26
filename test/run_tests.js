@@ -36,4 +36,6 @@ async.forEachSeries(tests, function(test, cb) {
     exitCode && process.exit(exitCode);
     cb();
   });
+}, function(){
+  process.exit(0);
 });
