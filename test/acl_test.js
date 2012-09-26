@@ -9,21 +9,25 @@ function testBackend(type, options, cb){
   {
     case "memory":
       var memoryBackend = require('../lib/memory-backend');
-      console.log("Starting Memory Backend tests"); 
       startTests(new memoryBackend(), cb);
       break;
     
     case "redis":
       var redisBackend = require('../lib/redis-backend');
-      var client = require('redis').createClient(options.port, options.host );
-      startTests(new redisBackend(client), cb);
+      var client = require('redis').createClient(
+        options.port, options.host,  {no_ready_check: true} );
+      var start = function(){
+        startTests(new redisBackend(client), cb);
+      };
+      if (options.password) client.auth(options.password, start);
+      else start();
       break;
       
     case "mongodb":
       var mongodb = require('mongodb'); 
       var mongoDBBackend = require('../lib/mongodb-backend');
-      mongodb.Db.connect(options, function(error, client) {
-        startTests(new mongoDBBackend(client, "acl"), cb);
+      mongodb.connect(options,function(error, db) {
+        startTests(new mongoDBBackend(db, "acl"), cb);
       });   
       break;
       

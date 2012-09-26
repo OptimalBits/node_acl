@@ -1,21 +1,39 @@
+var testBackend = require('./acl_test').testBackend,
+  async = require('async');
 
-var testBackend = require('./acl_test').testBackend;
+var tests = [
 
-/* memory */
-testBackend("memory", {}, function(results){
-  var exitCode = results.honored === results.total ? 0 : -1;
-  exitCode && process.exit(exitCode);
+  /* Memory */
+  function(cb) {
+    console.log("Testing memory backend");
+    testBackend("memory", {}, cb);
+  },
   
-  /* redis */
-  testBackend("redis", { host:'127.0.0.1', port:6379}, function(results){
+  /* Redis */
+  function(cb) {
+    console.log("Testing Redis backend");
+    var options = {
+      host: '127.0.0.1',
+      port: 6379,
+      password: null
+    };
+    testBackend("redis", options, cb);
+  },
+  
+  /* MongoDB */
+  function(cb) {
+    console.log("Testing MongoDB backend");
+    var url = "mongodb://127.0.0.1:27017/acltest";
+    testBackend("mongodb", url, cb);
+  }
+
+];
+
+// run tests
+async.forEachSeries(tests, function(test, cb) {
+  test(function(results) {
     var exitCode = results.honored === results.total ? 0 : -1;
     exitCode && process.exit(exitCode);
-    
-    /* MongoDB */
-    //testBackend("mongodb", "mongodb://127.0.0.1:27017/acltest");
-    testBackend("mongodb", "mongodb://127.0.0.1:27017/acltest", function(results){
-      var exitCode = results.honored === results.total ? 0 : -1;
-      exitCode && process.exit(exitCode);
-    })
+    cb();
   });
 });
