@@ -62,6 +62,9 @@ Create your acl module by requiring it and instantiating it with a valid backend
     
     // Or Using the memory backend
     acl = new acl(new acl.memoryBackend());
+    
+    // Or Using the mongodb backend
+    acl = new acl(new acl.mongodbBackend());
 
 All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
 
