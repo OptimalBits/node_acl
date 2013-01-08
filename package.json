@@ -1,6 +1,6 @@
 {
   "name" : "acl",
-  "version" : "0.2.2",
+  "version" : "0.2.3",
   "description" : "An Access Control List module, based on Redis with Express middleware support",
   "keywords" : ["middleware","acl","web"],
   "repository":"git://github.com/optimalbits/node_acl.git",
