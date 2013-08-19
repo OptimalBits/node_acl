@@ -25,7 +25,17 @@ var tests = [
     console.log("Testing MongoDB backend");
     var url = "mongodb://127.0.0.1:27017/acltest";
     testBackend("mongodb", url, cb);
-  }
+  },
+  
+  /* CouchDB */
+ /* function(cb) {
+    console.log("Testing CouchDB backend");
+    var options = {
+      host: '127.0.0.1',
+      port: 5984
+    };
+    testBackend("couchdb", options, cb);
+  }*/
 
 ];
 
