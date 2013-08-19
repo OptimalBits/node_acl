@@ -50,7 +50,6 @@ npm install acl
 * [isAllowed](#isAllowed)
 * [areAnyRolesAllowed](#areAnyRolesAllowed)
 * [whatResources](#whatResources)
-* [clean](#clean)
 * [middleware](#middleware)
 * [backend](#backend)
 
