@@ -52,6 +52,7 @@ npm install acl
 * [whatResources](#whatResources)
 * [clean](#clean)
 * [middleware](#middleware)
+* [backend](#backend)
 
 ##Examples
 
@@ -61,13 +62,13 @@ Create your acl module by requiring it and instantiating it with a valid backend
 var acl = require('acl');
 
 // Using redis backend
-acl = new acl(new acl.redisBackend(client));
+acl = new acl(new acl.redisBackend(redisClient, prefix));
 
 // Or Using the memory backend
 acl = new acl(new acl.memoryBackend());
 
 // Or Using the mongodb backend
-acl = new acl(new acl.mongodbBackend());
+acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
 ```
 
 All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
@@ -419,6 +420,24 @@ __Arguments__
     userId 			  {String} the user id for the acl system (or if not specified, req.userId)
     permissions 	  {Array} the permissions to check for.
 ```
+
+---------------------------------------
+
+<a name="backend" />
+### backend( db, [prefix] )
+
+Creates a backend instance. All backends except Memory require driver or database instance.
+
+__Arguments__
+
+```javascript
+    db 		  {Object} Database instance
+    prefix 	  {String} Optional collection prefix
+```
+
+var mongoBackend = new acl.mongodbBackend(db, 'acl_')
+
+Creates a new MongoDB backend using database instance `db`.
 
 ##Tests
 
