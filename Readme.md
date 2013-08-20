@@ -434,15 +434,19 @@ __Arguments__
     prefix 	  {String} Optional collection prefix
 ```
 
+```javascript
 var mongodb = require('mongodb'); 
 mongodb.connect("mongodb://127.0.0.1:27017/acltest", function(error, db) {
   var mongoBackend = new acl.mongodbBackend(db, 'acl_');
 });   
+```
 
 Creates a new MongoDB backend using database instance `db`.
 
+```javascript
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
 var redisBackend = new redisBackend(client);
+```
 
 Creates a new Redis backend using Redis client `client`.
 
