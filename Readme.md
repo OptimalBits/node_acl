@@ -50,8 +50,8 @@ npm install acl
 * [isAllowed](#isAllowed)
 * [areAnyRolesAllowed](#areAnyRolesAllowed)
 * [whatResources](#whatResources)
-* [clean](#clean)
 * [middleware](#middleware)
+* [backend](#backend)
 
 ##Examples
 
@@ -61,13 +61,13 @@ Create your acl module by requiring it and instantiating it with a valid backend
 var acl = require('acl');
 
 // Using redis backend
-acl = new acl(new acl.redisBackend(client));
+acl = new acl(new acl.redisBackend(redisClient, prefix));
 
 // Or Using the memory backend
 acl = new acl(new acl.memoryBackend());
 
 // Or Using the mongodb backend
-acl = new acl(new acl.mongodbBackend());
+acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
 ```
 
 All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
@@ -420,11 +420,41 @@ __Arguments__
     permissions 	  {Array} the permissions to check for.
 ```
 
+---------------------------------------
+
+<a name="backend" />
+### backend( db, [prefix] )
+
+Creates a backend instance. All backends except Memory require driver or database instance.
+
+__Arguments__
+
+```javascript
+    db 		  {Object} Database instance
+    prefix 	  {String} Optional collection prefix
+```
+
+```javascript
+var mongodb = require('mongodb'); 
+mongodb.connect("mongodb://127.0.0.1:27017/acltest", function(error, db) {
+  var mongoBackend = new acl.mongodbBackend(db, 'acl_');
+});   
+```
+
+Creates a new MongoDB backend using database instance `db`.
+
+```javascript
+var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
+var redisBackend = new redisBackend(client);
+```
+
+Creates a new Redis backend using Redis client `client`.
+
 ##Tests
 
 Run tests with vows:
 ```javascript
- vows test/*
+ node test/run_tests.js
 ```
 
 ## Future work
