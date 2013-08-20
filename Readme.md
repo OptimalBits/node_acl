@@ -450,7 +450,7 @@ Creates a new Redis backend using Redis client `client`.
 
 Run tests with vows:
 ```javascript
- vows test/*
+ node test/run_tests.js
 ```
 
 ## Future work
