@@ -16,6 +16,7 @@ describe('MongoDB', function () {
 
   tests.Allows()
   tests.Allowance()
+  tests.WhatResources()
 })
 
 return;

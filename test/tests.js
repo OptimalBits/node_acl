@@ -323,3 +323,59 @@ exports.Allowance = function () {
     })
   })
 }
+
+
+
+
+exports.WhatResources = function () {
+  describe('whatResources queries', function () {
+    it('What resources have "bar" some rights on?', function (done) {
+      var acl = new Acl(this.backend)
+      
+      acl.whatResources('bar', function (err, resources) {
+        assert.isNull(err)
+        assert.include(resources.blogs, 'view')
+        assert.include(resources.blogs, 'delete')
+        done()
+      })
+    })
+
+    it('What resources have "bar" view rights on?', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.whatResources('bar', 'view', function (err, resources) {
+        assert.isNull(err)
+        assert.include(resources, 'blogs')
+        done()
+      })
+    })
+    
+    it('What resources have "fumanchu" some rights on?', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.whatResources('fumanchu', function (err, resources) {
+        assert.isNull(err)
+        assert.include(resources.blogs, 'get')
+        assert.include(resources.forums, 'delete')
+        assert.include(resources.forums, 'get')
+        assert.include(resources.forums, 'put')
+        assert.include(resources.news, 'delete')
+        assert.include(resources.news, 'get')
+        assert.include(resources.news, 'put')
+        done()
+      })
+    })
+    
+    it('What resources have "baz" some rights on?', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.whatResources('baz', function (err, resources) {
+        assert.isNull(err)
+        assert.include(resources.blogs, 'view')
+        assert.include(resources.blogs, 'delete')
+        assert.include(resources.blogs, 'edit')
+        done()
+      })
+    })
+  })
+}
