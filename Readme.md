@@ -452,9 +452,9 @@ Creates a new Redis backend using Redis client `client`.
 
 ##Tests
 
-Run tests with vows:
+Run tests with `npm` (requires mocha):
 ```javascript
- node test/run_tests.js
+ npm test
 ```
 
 ## Future work
