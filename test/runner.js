@@ -14,13 +14,7 @@ describe('MongoDB', function () {
     })
   })
 
-  tests.Allows()
-  tests.Allowance()
-  tests.WhatResources()
-  tests.PermissionRemoval()
-  tests.RoleRemoval()
-  tests.ResourceRemoval()
-  tests.UserRoleRemoval()
+  run()
 })
 
 
@@ -48,14 +42,8 @@ describe('Redis', function () {
       start()
     }
   })
-
-  tests.Allows()
-  tests.Allowance()
-  tests.WhatResources()
-  tests.PermissionRemoval()
-  tests.RoleRemoval()
-  tests.ResourceRemoval()
-  tests.UserRoleRemoval()
+  
+  run()
 })
 
 
@@ -64,12 +52,12 @@ describe('Memory', function () {
     var self = this
       self.backend = new Acl.memoryBackend()
   })
-
-  tests.Allows()
-  tests.Allowance()
-  tests.WhatResources()
-  tests.PermissionRemoval()
-  tests.RoleRemoval()
-  tests.ResourceRemoval()
-  tests.UserRoleRemoval()
+  
+  run()
 })
+
+function run() {
+  Object.keys(tests).forEach(function (test) {
+    tests[test]()
+  })
+}
