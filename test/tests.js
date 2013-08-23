@@ -609,3 +609,48 @@ exports.UserRoleRemoval = function () {
     })
   })
 }
+
+
+
+exports.i32RoleRemoval = function () {
+  describe('Github issue #32: Removing a role removes the entire "allows" document.', function () {
+    it('Should not do that', function (done) {
+      var acl = new Acl(this.backend)
+      
+      acl.allow(['role1', 'role2', 'role3'], ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err) {
+        assert(!err)
+
+        acl.addUserRoles('user1', 'role1', function (err) {
+          assert(!err)
+
+          acl.addRoleParents('role1', 'parentRole1', function (err) {
+            assert(!err)
+
+            acl.whatResources('role1', function (err, res) {
+              assert(!err)
+              assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+
+              acl.whatResources('role2', function (err, res) {
+                assert(!err)
+                assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+
+                acl.removeRole('role1', function (err) {
+                  assert(!err)
+
+                  acl.whatResources('role1', function (err, res) {
+                    assert(Object.keys(res).length === 0)
+
+                    acl.whatResources('role2', function (err, res) {
+                      assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+                      done()
+                    })
+                  })
+                })
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+}
