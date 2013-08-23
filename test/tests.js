@@ -614,40 +614,64 @@ exports.UserRoleRemoval = function () {
 
 exports.i32RoleRemoval = function () {
   describe('Github issue #32: Removing a role removes the entire "allows" document.', function () {
-    it('Should not do that', function (done) {
+    it('Add roles/resources/permissions', function (done) {
       var acl = new Acl(this.backend)
       
       acl.allow(['role1', 'role2', 'role3'], ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err) {
         assert(!err)
+        done()
+      })
+    })
+
+    it('Add user roles and parent roles', function (done) {
+      var acl = new Acl(this.backend)
 
         acl.addUserRoles('user1', 'role1', function (err) {
           assert(!err)
 
           acl.addRoleParents('role1', 'parentRole1', function (err) {
             assert(!err)
+            done()
+          })
+        })
+    })
+    
+    it('Verify that roles have permissions as assigned', function(done){
+      var acl = new Acl(this.backend)
+      
+      acl.whatResources('role1', function (err, res) {
+        assert(!err)
+        assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
 
-            acl.whatResources('role1', function (err, res) {
-              assert(!err)
-              assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+        acl.whatResources('role2', function (err, res) {
+          assert(!err)
+          assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+          done()
+        })
+      })
+    })
 
-              acl.whatResources('role2', function (err, res) {
-                assert(!err)
-                assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+    it('Remove role "role1"', function(done){
+      var acl = new Acl(this.backend)
 
-                acl.removeRole('role1', function (err) {
-                  assert(!err)
+      acl.removeRole('role1', function (err) {
+        assert(!err)
+        done()
+      })
+    })
 
-                  acl.whatResources('role1', function (err, res) {
-                    assert(Object.keys(res).length === 0)
+    it('Verify that "role1" has no permissions and "role2" has permissions intact', function(done){
+      var acl = new Acl(this.backend)
 
-                    acl.whatResources('role2', function (err, res) {
-                      assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
-                      done()
-                    })
-                  })
-                })
-              })
-            })
+      acl.removeRole('role1', function (err) {
+        assert(!err)
+
+        acl.whatResources('role1', function (err, res) {
+          assert(Object.keys(res).length === 0)
+
+          acl.whatResources('role2', function (err, res) {
+            assert.deepEqual(res.res1.sort(), [ 'perm1', 'perm2', 'perm3' ])
+            done()
           })
         })
       })
