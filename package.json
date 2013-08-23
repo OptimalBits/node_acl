@@ -15,9 +15,10 @@
     "mongodb":"*"
   },
   "devDependencies": {
-      "vows": "0.7.x"
+      "mocha": "~1.12",
+      "chai": "~1.7.2"
   },
   "scripts": {
-      "test": "node test/run_tests.js"
+      "test": "mocha test/runner.js --reporter spec"
   }
 }
