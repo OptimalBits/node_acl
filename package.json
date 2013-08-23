@@ -18,6 +18,6 @@
       "vows": "0.7.x"
   },
   "scripts": {
-      "test": "node test/run_tests.js"
+      "test": "mocha test/runner.js --reporter spec"
   }
 }

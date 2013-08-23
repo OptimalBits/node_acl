@@ -422,9 +422,9 @@ __Arguments__
 
 ##Tests
 
-Run tests with vows:
+Run tests with `npm` (requires mocha):
 ```javascript
- vows test/*
+ npm test
 ```
 
 ## Future work
