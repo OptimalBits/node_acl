@@ -207,7 +207,7 @@ Adds roles to a given user id.
 __Arguments__
  
 ```javascript
-    userId   {String} User id.
+    userId   {String|Number} User id.
     roles    {String|Array} Role(s) to add to the user id.
     callback {Function} Callback called when finished.
 ```
@@ -222,7 +222,7 @@ Remove roles from a given user.
 __Arguments__
 
 ```javascript
-    userId   {String} User id.
+    userId   {String|Number} User id.
     roles    {String|Array} Role(s) to remove to the user id.
     callback {Function} Callback called when finished.
 ```
@@ -237,7 +237,7 @@ Return all the roles from a given user.
 __Arguments__
   
 ```javascript
-    userId   {String} User id.
+    userId   {String|Number} User id.
     callback {Function} Callback called when finished.
 ```
 
@@ -343,7 +343,7 @@ resource name to a list of permissions for that resource.
 __Arguments__
   
 ```javascript
-    userId    {String} User id.
+    userId    {String|Number} User id.
     resources {String|Array} resource(s) to ask permissions for.
     callback  {Function} Callback called when finished.
 ```
@@ -359,7 +359,7 @@ permissions (note: it must fulfill all the permissions).
 __Arguments__
   
 ```javascript
-    userId      {String} User id.
+    userId      {String|Number} User id.
     resource    {String|Array} resource(s) to ask permissions for.
     permissions {String|Array} asked permissions.
     callback    {Function} Callback called wish the result.
@@ -416,7 +416,7 @@ __Arguments__
 
 ```javascript
     numPathComponents {Number} number of components in the url to be considered part of the resource name.
-    userId 			  {String} the user id for the acl system (or if not specified, req.userId)
+    userId 			  {String|Number} the user id for the acl system (or if not specified, req.userId)
     permissions 	  {Array} the permissions to check for.
 ```
 
