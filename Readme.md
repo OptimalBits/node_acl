@@ -360,7 +360,7 @@ __Arguments__
   
 ```javascript
     userId      {String|Number} User id.
-    resource    {String|Array} resource(s) to ask permissions for.
+    resource    {String} resource to ask permissions for.
     permissions {String|Array} asked permissions.
     callback    {Function} Callback called wish the result.
 ```
@@ -375,7 +375,7 @@ __Arguments__
   
 ```javascript
     roles       {String|Array} Role(s) to check the permissions for.
-    resource    {String} resource(s) to ask permissions for.
+    resource    {String} resource to ask permissions for.
     permissions {String|Array} asked permissions.
     callback    {Function} Callback called wish the result.
 ```
