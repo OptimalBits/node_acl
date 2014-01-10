@@ -1,24 +1,30 @@
 {
-  "name" : "acl",
-  "version" : "0.2.6",
-  "description" : "An Access Control List module, based on Redis with Express middleware support",
-  "keywords" : ["middleware","acl","web"],
-  "repository":"git://github.com/optimalbits/node_acl.git",
-  "author" : "Manuel Astudillo <manuel@optimalbits.com>",
-  "homepage" : "https://github.com/optimalbits/node_acl",
-  "engines": { "node": ">= 0.4.1"},
-  "main" : "./index.js",
+  "name": "acl",
+  "version": "0.3.0",
+  "description": "An Access Control List module, based on Redis with Express middleware support",
+  "keywords": [
+    "middleware",
+    "acl",
+    "web"
+  ],
+  "repository": "git://github.com/optimalbits/node_acl.git",
+  "author": "Manuel Astudillo <manuel@optimalbits.com>",
+  "homepage": "https://github.com/optimalbits/node_acl",
+  "engines": {
+    "node": ">= 0.4.1"
+  },
+  "main": "./index.js",
   "dependencies": {
     "redis": ">= 0.7.1",
-    "async": ">=0.1.15",
-    "underscore": ">= 1.2.2",
-    "mongodb":"*"
+    "mongodb": "*",
+    "bluebird": "~0.11.6-0",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
-      "mocha": "~1.12",
-      "chai": "~1.7.2"
+    "mocha": "~1.12",
+    "chai": "~1.7.2"
   },
   "scripts": {
-      "test": "mocha test/runner.js --reporter spec"
+    "test": "mocha test/runner.js --reporter spec"
   }
 }
