@@ -26,6 +26,7 @@
     "chai": "~1.7.2"
   },
   "scripts": {
-    "test": "mocha test/runner.js --reporter spec"
+    "test": "mocha test/runner.js --reporter spec",
+    "cover": "istanbul cover -- _mocha test/runner.js --reporter spec"
   }
 }
