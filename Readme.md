@@ -13,7 +13,7 @@ for admin kind of functionality.
 A Redis, MongoDB and In-Memory based backends are provided, but the generic backend interface can be 
 implemented for supporting other databases.
 
-Follow [optimalbits](http://twitter.com/optimalbits) for news and updates regarding this library.
+Follow [manast](http://twitter.com/manast) for news and updates regarding this library.
 
 ##Status
 
@@ -70,7 +70,8 @@ acl = new acl(new acl.memoryBackend());
 acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
 ```
 
-All the following functions take a callback with an err parameter as last parameter. We omit it in the examples for simplicity.
+All the following functions return a promise or optionally take a callback with 
+an err parameter as last parameter. We omit them in the examples for simplicity.
 
 Create roles implicitly by giving them permissions:
 
