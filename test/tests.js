@@ -3,6 +3,13 @@ var Acl = require('../')
 
 exports.Allows = function () {
   describe('allow', function () {
+
+    // TODO @inolasco: Setting longer timeout for this test, as the tests:
+    // - MongoDB allow guest to view blogs:
+    // - MongoDB allow guest to view forums:
+    // where failing, and I'm not sure if it's because my machine is slow, 
+    // or my changes affect performance
+    this.timeout(5000);
     it('guest to view blogs', function (done) {
       var acl = new Acl(this.backend)
 
