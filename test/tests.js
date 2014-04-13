@@ -10,8 +10,8 @@ exports.Allows = function () {
     // where failing, and I'm not sure if it's because my machine is slow, 
     // or my changes affect performance.
     // Probably a performance issue in my machine only, since it's the first test and it creates the tables
-    this.timeout(5000);
     it('guest to view blogs', function (done) {
+        this.timeout(7000);
       var acl = new Acl(this.backend)
 
       acl.allow('guest', 'blogs', 'view', function (err) {
