@@ -402,7 +402,7 @@ __Arguments__
   
 ```javascript
     role        {String|Array} Roles
-    permissions {String[Array} Permissions
+    permissions {String|Array} Permissions
     callback    {Function} Callback called wish the result.
 ```
 
@@ -411,14 +411,16 @@ __Arguments__
 <a name="middleware" />
 ### middleware( [numPathComponents, userId, permissions] )
 
-Middleware for express. 
+Middleware for express.
+
+To create a custom getter for userId, pass a function(req, res) which returns the userId when called (must not be async).
 
 __Arguments__
 
 ```javascript
     numPathComponents {Number} number of components in the url to be considered part of the resource name.
-    userId 			  {String|Number} the user id for the acl system (or if not specified, req.userId)
-    permissions 	  {Array} the permissions to check for.
+    userId            {String|Number|Function} the user id for the acl system (defaults to req.session.userId)
+    permissions       {String|Array} the permission(s) to check for (defaults to req.method.toLowerCase())
 ```
 
 ---------------------------------------
