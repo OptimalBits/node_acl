@@ -3,6 +3,15 @@ var Acl = require('../')
 
 exports.Allows = function () {
   describe('allow', function () {
+
+    // TODO @inolasco: Setting longer timeout for this test, as the tests:
+    // - MongoDB allow guest to view blogs:
+    // - MongoDB allow guest to view forums:
+    // where failing, and I'm not sure if it's because my machine is slow, 
+    // or my changes affect performance.
+    // Probably a performance issue in my machine only, since it's the first test and it creates the tables
+    this.timeout(7000);
+
     it('guest to view blogs', function (done) {
       var acl = new Acl(this.backend)
 
@@ -565,7 +574,7 @@ exports.PermissionRemoval= function () {
     })
 
     it('Remove view permissions from resource blogs from role bar', function (done) {
-      var acl = new Acl(this.backend)
+      var acl = new Acl(this.backend);
       acl.removeAllow('bar', 'blogs', 'view', function (err) {
         assert(!err)
         done()
@@ -575,7 +584,7 @@ exports.PermissionRemoval= function () {
 
   describe('See if permissions were removed', function () {
     it('What resources have "fumanchu" some rights on after removed some of them?', function (done) {
-      var acl = new Acl(this.backend)
+      var acl = new Acl(this.backend);
       acl.whatResources('fumanchu', function (err, resources) {
         assert.isNull(err)
 
