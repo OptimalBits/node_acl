@@ -711,12 +711,11 @@ exports.ResourceRemoval = function () {
     })
     it('What permissions has userId=4 over blogs?', function (done) {
       var acl = new Acl(this.backend)
-      acl.allowedPermissions(4, 'blogs', function (err, permissions) {
-        assert.isNull(err)
+      acl.allowedPermissions(4, 'blogs').then(function (permissions) {
         assert.property(permissions, 'blogs')
         assert(permissions.blogs.length === 0)
         done()
-      })
+      }, done);
     })
   })
 
