@@ -72,6 +72,26 @@ describe('Memory', function () {
   run()
 })
 
+describe('Postgres', function () {
+  before(function (done) {
+    var self = this
+      , knex = require('knex')
+  
+  var db = knex({
+    client: 'postgres',
+    connection: {
+      host: '127.0.0.1',
+      port: 5432,
+      user: 'postgres',
+      database: 'travis_ci_test'
+    }
+  });
+  
+  self.backend = new Acl.postgresBackend(db, "acl");
+  
+  run();
+});
+  
 function run() {
   Object.keys(tests).forEach(function (test) {
     tests[test]()
