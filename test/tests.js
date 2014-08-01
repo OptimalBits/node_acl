@@ -1,16 +1,11 @@
 var Acl = require('../')
   , assert = require('chai').assert
+  , expect = require('chai').expect;
 
 exports.Allows = function () {
   describe('allow', function () {
 
-    // TODO @inolasco: Setting longer timeout for this test, as the tests:
-    // - MongoDB allow guest to view blogs:
-    // - MongoDB allow guest to view forums:
-    // where failing, and I'm not sure if it's because my machine is slow, 
-    // or my changes affect performance.
-    // Probably a performance issue in my machine only, since it's the first test and it creates the tables
-    this.timeout(7000);
+   this.timeout(10000);
 
     it('guest to view blogs', function (done) {
       var acl = new Acl(this.backend)
@@ -186,8 +181,6 @@ exports.Allows = function () {
     })
   })
 }
-
-
 
 
 
@@ -823,7 +816,31 @@ exports.UserRoleRemoval = function () {
   })
 }
 
+exports.i55PermissionRemoval = function () {
+  describe('Github issue #55: removeAllow is removing all permissions.', function () {
+    it('Add roles/resources/permissions', function () {
+      var acl = new Acl(this.backend)
 
+      return acl.addUserRoles('jannette', 'member').then(function(){
+        return acl.allow('member', 'blogs', ['view', 'update']);
+      }).then(function(){
+        return acl.isAllowed('jannette', 'blogs', 'view', function(err, allowed){
+          expect(allowed).to.be.eql(true);
+        })
+      }).then(function(){
+        return acl.removeAllow('member', 'blogs', 'update');
+      }).then(function(){
+        return acl.isAllowed('jannette', 'blogs', 'view', function(err, allowed){
+          expect(allowed).to.be.eql(true);
+        });
+      }).then(function(){
+        return acl.isAllowed('jannette', 'blogs', 'update', function(err, allowed){
+          expect(allowed).to.be.eql(false);
+        });
+      })
+    })
+  })
+}
 
 exports.i32RoleRemoval = function () {
   describe('Github issue #32: Removing a role removes the entire "allows" document.', function () {
