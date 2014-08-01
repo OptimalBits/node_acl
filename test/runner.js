@@ -81,11 +81,10 @@ describe('Postgres', function () {
     var db = knex({
       client: 'postgres',
       connection: {
-        host: '192.168.59.103',
-        port: 5433,
-        user: 'blnapi',
-        password: 'blnapi',
-        database: 'blnapi'
+        host: '127.0.0.1',
+        port: 5432,
+        user: 'postgres',
+        database: 'travis_ci_test'
       }
     });
     
