@@ -13,8 +13,3 @@ addons:
   
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - psql -c 'create table node_acl_meta (key TEXT NOT NULL PRIMARY KEY, value TEXT[][] NOT NULL);' -d travis_ci_test -U postgres
-  - psql -c 'create table node_acl_resources (key TEXT NOT NULL PRIMARY KEY, value TEXT[][] NOT NULL);' -d travis_ci_test -U postgres
-  - psql -c 'create table node_acl_parents (key TEXT NOT NULL PRIMARY KEY, value TEXT[][] NOT NULL);' -d travis_ci_test -U postgres
-  - psql -c 'create table node_acl_users (key TEXT NOT NULL PRIMARY KEY, value TEXT[][] NOT NULL);' -d travis_ci_test -U postgres
-  - psql -c 'create table node_acl_permissions (key TEXT NOT NULL PRIMARY KEY, value JSON NOT NULL);' -d travis_ci_test -U postgres
