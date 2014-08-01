@@ -16,7 +16,7 @@
   "main": "./index.js",
   "dependencies": {
     "async": "~0.2.9",
-    "bluebird": "^1.2.4",
+    "bluebird": "^2.2.2",
     "lodash": "~2.4.1",
     "mocha": "^1.21.3",
     "mongodb": "*",
