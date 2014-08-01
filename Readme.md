@@ -428,13 +428,14 @@ __Arguments__
 <a name="backend" />
 ### backend( db, [prefix] )
 
-Creates a backend instance. All backends except Memory require driver or database instance.
+Creates a backend instance. All backends except Memory require driver or database instance. `useSingle` is only applicable to the MongoDB backend.
 
 __Arguments__
 
 ```javascript
     db 		  {Object} Database instance
     prefix 	  {String} Optional collection prefix
+    useSingle 	  {Boolean} Create one collection for all resources (defaults to false)
 ```
 
 ```javascript
