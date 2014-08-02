@@ -10,8 +10,7 @@ Create roles and assign roles to users. Sometimes it may even be useful to creat
 to get the finest granularity possible, while in other situations you will give the *asterisk* permission 
 for admin kind of functionality.
 
-A Redis, MongoDB and In-Memory based backends are provided, but the generic backend interface can be 
-implemented for supporting other databases.
+A Redis, MongoDB and In-Memory based backends are provided in the module, check also *knex* based backend that supports several other [databases](https://github.com/christophertrudel/node_acl_knex)
 
 Follow [manast](http://twitter.com/manast) for news and updates regarding this library.
 
