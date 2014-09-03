@@ -16,7 +16,7 @@ Follow [manast](http://twitter.com/manast) for news and updates regarding this l
 
 ##Status
 
-[![BuildStatus](https://secure.travis-ci.org/OptimalBits/node_acl.png?branch=master)](http://travis-ci.org/optimalbits/node_acl)
+[![BuildStatus](https://secure.travis-ci.org/OptimalBits/node_acl.png?branch=master)](http://travis-ci.org/OptimalBits/node_acl)
 
 ##Features
 
