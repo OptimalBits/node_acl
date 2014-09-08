@@ -81,11 +81,11 @@ exports.Allows = function () {
           if (err) return done(err);
 
           assert.deepEqual(roles, ['admin']);
-          acl.isInRole('harry', 'admin', function(err, is_in_role) {
+          acl.hasRole('harry', 'admin', function(err, is_in_role) {
             if (err) return done(err);
 
             assert.ok(is_in_role);
-            acl.isInRole('harry', 'no role', function(err, is_in_role) {
+            acl.hasRole('harry', 'no role', function(err, is_in_role) {
               if (err) return done(err);
 
               assert.notOk(is_in_role)
