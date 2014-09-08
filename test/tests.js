@@ -71,6 +71,31 @@ exports.Allows = function () {
 		})
   })
 
+  describe('read User Roles', function() {
+    it('run userRoles function', function(done) {
+      var acl = new Acl(this.backend)
+      acl.addUserRoles('harry', 'admin', function (err) {
+        if (err) return done(err);
+
+        acl.userRoles('harry', function(err, roles) {
+          if (err) return done(err);
+
+          assert.deepEqual(roles, ['admin']);
+          acl.isInRole('harry', 'admin', function(err, is_in_role) {
+            if (err) return done(err);
+
+            assert.ok(is_in_role);
+            acl.isInRole('harry', 'no role', function(err, is_in_role) {
+              if (err) return done(err);
+
+              assert.notOk(is_in_role)
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
 
   describe('allow', function () {
     it('admin view/add/edit/delete users', function (done) {
