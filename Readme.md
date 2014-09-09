@@ -243,6 +243,21 @@ __Arguments__
 
 ---------------------------------------
 
+<a name="isInRole" />
+### isInRole( userId, rolename, function(err, is_in_role) )
+
+Return boolean whether user is in the role
+
+__Arguments__
+  
+```javascript
+    userId   {String|Number} User id.
+    rolename {String|Number} role name.
+    callback {Function} Callback called when finished.
+```
+
+---------------------------------------
+
 <a name="addRoleParents" />
 ### addRoleParents( role, parents, function(err) )
 
