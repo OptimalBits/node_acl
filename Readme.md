@@ -243,10 +243,10 @@ __Arguments__
 
 ---------------------------------------
 
-<a name="isInRole" />
-### isInRole( userId, rolename, function(err, is_in_role) )
+<a name="hasRole" />
+### hasRole( userId, rolename, function(err, hasRole) )
 
-Return boolean whether user is in the role
+Return boolean whether user has the role
 
 __Arguments__
   
