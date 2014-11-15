@@ -306,6 +306,9 @@ __Arguments__
 
 Adds the given permissions to the given roles over the given resources.
 
+You can also assign a single user permissions on a resource by providing
+their userId instead of a role name.
+
 __Arguments__
   
 ```javascript
@@ -370,6 +373,9 @@ __Arguments__
   
 Checks if the given user is allowed to access the resource for the given 
 permissions (note: it must fulfill all the permissions).
+
+This will also check if the user has been granted access to the resource by
+using their userId as the role name.
 
 __Arguments__
   
