@@ -124,6 +124,15 @@ exports.Allows = function () {
         done()
       })
     })
+
+    it('walter to view/edit/delete pages', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.allow('walter', 'pages', ['view','edit','delete'], function (err) {
+        assert(!err)
+        done()
+      })
+    })
   })
 
   describe('add role parents', function () {
@@ -293,7 +302,6 @@ exports.Allowance = function () {
         })
       })
 
-
       it('Can jsmith edit blogs?', function (done) {
         var acl = new Acl(this.backend)
 
@@ -451,6 +459,26 @@ exports.Allowance = function () {
         acl.isAllowed(4, 'forums', ['put','delete'], function (err, allow) {
           assert(!err)
           assert(allow)
+          done()
+        })
+      })
+
+      it('Can walter edit pages?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('walter', 'pages', 'edit', function (err, allow) {
+          assert(!err)
+          assert(allow)
+          done()
+        })
+      })
+
+      it('Can joed edit pages?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('joed', 'pages', 'edit', function (err, allow) {
+          assert(!err)
+          assert(!allow)
           done()
         })
       })
