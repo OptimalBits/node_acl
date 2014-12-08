@@ -862,6 +862,12 @@ exports.i55PermissionRemoval = function () {
         return acl.isAllowed('jannette', 'blogs', 'update', function(err, allowed){
           expect(allowed).to.be.eql(false);
         });
+      }).then(function(){
+        return acl.removeAllow('member', 'blogs', 'view');
+      }).then(function(){
+        return acl.isAllowed('jannette', 'blogs', 'view', function(err, allowed){
+          expect(allowed).to.be.eql(false);
+        });
       })
     })
   })
