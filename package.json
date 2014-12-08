@@ -11,20 +11,19 @@
   "author": "Manuel Astudillo <manuel@optimalbits.com>",
   "homepage": "https://github.com/optimalbits/node_acl",
   "engines": {
-    "node": ">= 0.4.1"
+    "node": ">= 0.10"
   },
   "main": "./index.js",
   "dependencies": {
-    "async": "~0.2.9",
-    "bluebird": "^2.2.2",
+    "async": "~0.9.0",
+    "bluebird": "^2.3.11",
     "lodash": "~2.4.1",
-    "mocha": "^1.21.3",
-    "mongodb": "*",
-    "redis": ">= 0.7.1"
+    "mongodb": "^1.4.23",
+    "redis": ">=0.12.1"
   },
   "devDependencies": {
-    "mocha": "~1.12",
-    "chai": "~1.7.2"
+    "mocha": "^2.0.1",
+    "chai": "~1.10.0"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
