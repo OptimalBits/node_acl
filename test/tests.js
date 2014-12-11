@@ -100,6 +100,23 @@ exports.Allows = function () {
       })
     })
   })
+  
+  describe('read Role Users', function() {
+    it('run roleUsers function', function(done) {
+      var acl = new Acl(this.backend)
+      acl.addUserRoles('harry', 'admin', function (err) {
+        if (err) return done(err);
+        
+        acl.roleUsers('admin', function(err, users) {
+          if (err) return done(err);
+          assert.include(users, 'harry')
+          assert.isFalse('invalid User' in users)
+          done();
+        })
+      })
+      
+    })
+  })
 
   describe('allow', function () {
     it('admin view/add/edit/delete users', function (done) {

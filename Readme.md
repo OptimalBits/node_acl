@@ -40,6 +40,8 @@ npm install acl
 * [addUserRoles](#addUserRoles)
 * [removeUserRoles](#removeUserRoles)
 * [userRoles](#userRoles)
+* [roleUsers](#roleUsers)
+* [hasRole](#hasRole)
 * [addRoleParents](#addRoleParents)
 * [removeRole](#removeRole)
 * [removeResource](#removeResource)
@@ -238,6 +240,20 @@ __Arguments__
   
 ```javascript
     userId   {String|Number} User id.
+    callback {Function} Callback called when finished.
+```
+
+---------------------------------------
+
+<a name="roleUsers" />
+### roleUsers( rolename, function(err, roles) )
+
+Return all users who has a given role.
+
+__Arguments__
+  
+```javascript
+    rolename   {String|Number} User id.
     callback {Function} Callback called when finished.
 ```
 
