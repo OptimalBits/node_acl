@@ -104,12 +104,17 @@ exports.Allows = function () {
   describe('read Role Users', function() {
     it('run roleUsers function', function(done) {
       var acl = new Acl(this.backend)
-      acl.roleUsers('admin', function(err, users) {
+      acl.addUserRoles('harry', 'admin', function (err) {
         if (err) return done(err);
-        assert.include(users, 'harry')
-        assert.isFalse('invalid User' in users)
-        done();
+        
+        acl.roleUsers('admin', function(err, users) {
+          if (err) return done(err);
+          assert.include(users, 'harry')
+          assert.isFalse('invalid User' in users)
+          done();
+        })
       })
+      
     })
   })
 
