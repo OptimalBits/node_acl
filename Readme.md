@@ -40,6 +40,8 @@ npm install acl
 * [addUserRoles](#addUserRoles)
 * [removeUserRoles](#removeUserRoles)
 * [userRoles](#userRoles)
+* [roleUsers](#roleUsers)
+* [hasRole](#hasRole)
 * [addRoleParents](#addRoleParents)
 * [removeRole](#removeRole)
 * [removeResource](#removeResource)
@@ -111,20 +113,20 @@ lead to unnecessary nested callbacks for handling errors. Instead use the follow
 
 ```javascript
 acl.allow([
-	{
-		roles:['guest','member'], 
-		allows:[
-			{resources:'blogs', permissions:'get'},
-			{resources:['forums','news'], permissions:['get','put','delete']}
-		]
-	},
-	{
-		roles:['gold','silver'], 
-		allows:[
-			{resources:'cash', permissions:['sell','exchange']},
-			{resources:['account','deposit'], permissions:['put','delete']}
-		]
-	}
+    {
+        roles:['guest','member'], 
+        allows:[
+            {resources:'blogs', permissions:'get'},
+            {resources:['forums','news'], permissions:['get','put','delete']}
+        ]
+    },
+    {
+        roles:['gold','silver'], 
+        allows:[
+            {resources:'cash', permissions:['sell','exchange']},
+            {resources:['account','deposit'], permissions:['put','delete']}
+        ]
+    }
 ])
 ```
 
@@ -132,9 +134,9 @@ You can check if a user has permissions to access a given resource with *isAllow
 
 ```javascript
 acl.isAllowed('joed', 'blogs', 'view', function(err, res){
-	if(res){
-		console.log("User joed is allowed to view blogs")
-	}
+    if(res){
+        console.log("User joed is allowed to view blogs")
+    }
 }
 ```
 
@@ -152,7 +154,7 @@ Sometimes is necessary to know what permissions a given user has over certain re
 
 ```javascript
 acl.allowedPermissions('james', ['blogs','forums'], function(err, permissions){
-	console.log(permissions)
+    console.log(permissions)
 })
 ```
 
@@ -238,6 +240,20 @@ __Arguments__
   
 ```javascript
     userId   {String|Number} User id.
+    callback {Function} Callback called when finished.
+```
+
+---------------------------------------
+
+<a name="roleUsers" />
+### roleUsers( rolename, function(err, roles) )
+
+Return all users who has a given role.
+
+__Arguments__
+  
+```javascript
+    rolename   {String|Number} User id.
     callback {Function} Callback called when finished.
 ```
 
@@ -447,9 +463,9 @@ Creates a backend instance. All backends except Memory require driver or databas
 __Arguments__
 
 ```javascript
-    db 		  {Object} Database instance
-    prefix 	  {String} Optional collection prefix
-    useSingle 	  {Boolean} Create one collection for all resources (defaults to false)
+    db        {Object} Database instance
+    prefix    {String} Optional collection prefix
+    useSingle     {Boolean} Create one collection for all resources (defaults to false)
 ```
 
 ```javascript

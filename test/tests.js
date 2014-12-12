@@ -57,22 +57,22 @@ exports.Allows = function () {
       })
     })
 
-		it('0 => guest, 1 => member, 2 => admin', function (done) {
-			var acl = new Acl(this.backend)
+    it('0 => guest, 1 => member, 2 => admin', function (done) {
+      var acl = new Acl(this.backend)
 
-			acl.addUserRoles(0, 'guest', function (err) {
-				assert(!err)
+      acl.addUserRoles(0, 'guest', function (err) {
+        assert(!err)
 
-				acl.addUserRoles(1, 'member', function (err) {
-					assert(!err)
+        acl.addUserRoles(1, 'member', function (err) {
+          assert(!err)
 
-					acl.addUserRoles(2, 'admin', function (err) {
-						assert(!err);
-						done()
-					})
-				})
-			})
-		})
+          acl.addUserRoles(2, 'admin', function (err) {
+            assert(!err);
+            done()
+          })
+        })
+      })
+    })
   })
 
   describe('read User Roles', function() {
@@ -98,6 +98,23 @@ exports.Allows = function () {
           })
         })
       })
+    })
+  })
+  
+  describe('read Role Users', function() {
+    it('run roleUsers function', function(done) {
+      var acl = new Acl(this.backend)
+      acl.addUserRoles('harry', 'admin', function (err) {
+        if (err) return done(err);
+        
+        acl.roleUsers('admin', function(err, users) {
+          if (err) return done(err);
+          assert.include(users, 'harry')
+          assert.isFalse('invalid User' in users)
+          done();
+        })
+      })
+      
     })
   })
 
@@ -228,7 +245,7 @@ exports.Allowance = function () {
         })
       })
 
-			it('Can userId=0 view blogs?', function (done) {
+      it('Can userId=0 view blogs?', function (done) {
         var acl = new Acl(this.backend)
 
         acl.isAllowed(0, 'blogs', 'view', function (err, allow) {
@@ -236,7 +253,7 @@ exports.Allowance = function () {
           assert(allow)
           done()
         })
-			})
+      })
 
       it('Can joed view forums?', function (done) {
         var acl = new Acl(this.backend)
@@ -880,15 +897,15 @@ exports.UserRoleRemoval = function () {
         assert(permissions.forums.length === 0)
         done()
       })
-			it('What permissions has userId=2 over forums and blogs?', function (done) {
-				var acl = new Acl(this.backend)
-				acl.allowedPermissions(2, ['forums','blogs'], function (err, permissions) {
-					assert(!err)
-					assert.isObject(permissions)
-					assert(permissions.forums.length === 0)
-					done()
-				})
-			})
+      it('What permissions has userId=2 over forums and blogs?', function (done) {
+        var acl = new Acl(this.backend)
+        acl.allowedPermissions(2, ['forums','blogs'], function (err, permissions) {
+          assert(!err)
+          assert.isObject(permissions)
+          assert(permissions.forums.length === 0)
+          done()
+        })
+      })
     })
 
     it('What resources have "baz" some rights on after removed blogs?', function (done) {
