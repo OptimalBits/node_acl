@@ -40,6 +40,7 @@ npm install acl
 * [addUserRoles](#addUserRoles)
 * [removeUserRoles](#removeUserRoles)
 * [userRoles](#userRoles)
+* [hasRole](#hasRole)
 * [addRoleParents](#addRoleParents)
 * [removeRole](#removeRole)
 * [removeResource](#removeResource)
