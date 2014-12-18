@@ -1040,3 +1040,75 @@ exports.i32RoleRemoval = function () {
     })
   })
 }
+
+exports.middleware = function () {
+  describe('Express Middleware', function () {
+    var userId = 'u123'
+
+    it('Should reject user not authenticated', function (done) {
+      var acl = new Acl(this.backend)
+      var reqMock = { url: '/res1/111' }
+      var resMock = {}
+      
+      acl.middleware(1, userId, 'get')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+
+    it('Add roles/resources/permissions', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.allow(['role1', 'role2', 'role3'], ['/res1', '/res2', '/res3'], ['perm1', 'perm2', 'perm3'], function (err) {
+        assert(!err)
+        done()
+      })
+    })
+
+    it('Add user roles', function (done) {
+      var acl = new Acl(this.backend)
+
+        acl.addUserRoles(userId, 'role1', function (err) {
+          assert(!err)
+          
+          done()
+        })
+    })
+
+    it('Should allow user to access resource with right permission', function (done) {
+      var logger = { debug: function(msg) { console.log(msg) } }
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/res1/341', userId: userId }
+      var resMock = {}
+      function getUserId(req) {
+        return reqMock.userId
+      }
+      
+      acl.middleware(1, getUserId, 'perm1')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should not allow to access resource with no permission', function (done) {
+      var logger = { debug: function(msg) { console.log(msg) } }
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/res1/452', userId: userId }
+      var resMock = {}
+      function getUserId(req) {
+        return reqMock.userId
+      }
+      
+      acl.middleware(1, getUserId, 'unknown-perm')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+    
+  })
+}
