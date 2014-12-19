@@ -1043,28 +1043,31 @@ exports.i32RoleRemoval = function () {
 
 exports.isAnyResourceAllowed = function () {
   describe('Multiple Resources', function () {
-    it('Assign a role permissions "perm1" and "perm2" to resources "res1", "res2", and "res3"', function (done) {
+    it('Assign a role permissions "perm1" to resources "res1", "res2", and "perm2" to "res3"', function (done) {
       var acl = new Acl(this.backend)
 
-      acl.allow('role1', ['res1', 'res2', 'res3'], ['perm1', 'perm2'], function (err) {
+      acl.allow('role1', ['res1', 'res2'], ['perm1'], function (err) {
         assert(!err)
-        done()
+        acl.allow('role2', 'res3', ['perm2'], function (err) {
+          assert(!err)
+          done()
+        })
       })
     })
 
     it('Assign the role to user', function (done) {
       var acl = new Acl(this.backend)
 
-        acl.addUserRoles('theUser', 'role1', function (err) {
+        acl.addUserRoles('theUser', ['role1', 'role2'], function (err) {
           assert(!err)
           done()
         })
     })
 
-    it('User should have "perm1" to one of resources "resx", "res2", "resz"', function(done){
+    it('User should have "perm1" to resources "res1", "res2", "res3"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAnyResourceAllowed('theUser', ['resx', 'res2', 'resz'], 'perm1', function (err, allow) {
+      acl.isAnyResourceAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2'], function (err, allow) {
         assert(!err)
         assert(allow)
         done()
@@ -1074,14 +1077,14 @@ exports.isAnyResourceAllowed = function () {
     it('User should not have "permx" to anyone of "res1", "res2", "res3"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAnyResourceAllowed('theUser', ['res1', 'res2', 'res3'], 'permx', function (err, allow) {
+      acl.isAnyResourceAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
       })
     })
 
-    it('User should not have "perm1" to anyone of "resx", "resy", "resz"', function(done){
+    it('User should not have "perm1" to other resources', function(done){
       var acl = new Acl(this.backend)
 
       acl.isAnyResourceAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
