@@ -2,6 +2,7 @@ var Acl = require('../')
   , assert = require('chai').assert
   , expect = require('chai').expect;
 
+
 exports.Allows = function () {
   describe('allow', function () {
 
@@ -1097,16 +1098,37 @@ exports.isAnyResourceAllowed = function () {
 }
 
 exports.middleware = function () {
+  var logger = { debug: function(msg) { console.log(msg) } }
+  
+  var resMock = function() {}
+      
+  function getUserId(req, res) {
+    return req.userId
+  }
+  
+  function resourceBuilderSample(req, res, cb) {
+    var resources = []
+    var parts = req.url.split('/').slice(1)
+    while(parts.length > 0) {
+      resources.push('/' + parts.join('/'))
+      parts.pop();
+    }
+    resources.push('*')
+    cb(undefined, resources)
+  }
+  
   describe('Express Middleware', function () {
-    var userId = 'u123'
+    var rootId = 'u1'
+    var superId = 'u2'
+    var editorId = 'u3'
+    var visitorId = 'u4'
 
     it('Should reject user not authenticated', function (done) {
-      var acl = new Acl(this.backend)
+      var acl = new Acl(this.backend, logger)
       var reqMock = { url: '/res1/111' }
-      var resMock = {}
       
-      acl.middleware(1, userId, 'get')(reqMock, resMock, function(err) {
-        assert(err && err.errorCode === 403)
+      acl.middleware(1, '', 'get')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 401)
         
         done()
       })
@@ -1115,51 +1137,106 @@ exports.middleware = function () {
     it('Add roles/resources/permissions', function (done) {
       var acl = new Acl(this.backend)
 
-      acl.allow(['role1', 'role2', 'role3'], ['/res1', '/res2', '/res3'], ['perm1', 'perm2', 'perm3'], function (err) {
+      acl.allow('ROLE_ROOT', '*', '*', function (err) {
         assert(!err)
-        done()
+        acl.allow('ROLE_SUPER', ['/folder1', '/folder2'], '*', function (err) {
+          assert(!err)
+          acl.allow('ROLE_EDITOR', '/folder1/file1', 'PUT', function (err) {
+            assert(!err)
+            acl.allow('ROLE_VISITOR', '/folder1', 'GET', function (err) {
+              assert(!err)
+              done()
+            })
+          })
+        })
       })
     })
 
     it('Add user roles', function (done) {
       var acl = new Acl(this.backend)
 
-        acl.addUserRoles(userId, 'role1', function (err) {
+        acl.addUserRoles(rootId, 'ROLE_ROOT', function (err) {
           assert(!err)
-          
-          done()
+          acl.addUserRoles(superId, 'ROLE_SUPER', function (err) {
+            assert(!err)
+            acl.addUserRoles(editorId, 'ROLE_EDITOR', function (err) {
+              assert(!err)
+              acl.addUserRoles(visitorId, 'ROLE_VISITOR', function (err) {
+                assert(!err)
+                done()
+              })
+            })
+          })
         })
     })
 
-    it('Should allow user to access resource with right permission', function (done) {
-      var logger = { debug: function(msg) { console.log(msg) } }
+    it('Should allow "visitor" user to get resource "/folder1/341"', function (done) {
       var acl = new Acl(this.backend, logger)
       
-      var reqMock = { url: '/res1/341', userId: userId }
-      var resMock = {}
-      function getUserId(req) {
-        return reqMock.userId
-      }
+      var reqMock = { url: '/folder1/341', userId: visitorId }
       
-      acl.middleware(1, getUserId, 'perm1')(reqMock, resMock, function(err) {
+      acl.middleware(resourceBuilderSample, getUserId, 'GET')(reqMock, resMock, function(err) {
         assert(!err)
         
         done()
       })
     })
 
-    it('Should not allow to access resource with no permission', function (done) {
-      var logger = { debug: function(msg) { console.log(msg) } }
+    it('Should not allow "visitor" user to update resource "/folder1/341"', function (done) {
       var acl = new Acl(this.backend, logger)
       
-      var reqMock = { url: '/res1/452', userId: userId }
-      var resMock = {}
-      function getUserId(req) {
-        return reqMock.userId
-      }
+      var reqMock = { url: '/folder1/341', userId: visitorId }
       
-      acl.middleware(1, getUserId, 'unknown-perm')(reqMock, resMock, function(err) {
+      acl.middleware(resourceBuilderSample, getUserId, 'PUT')(reqMock, resMock, function(err) {
         assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+
+    it('Should allow "editor" user to update resource "/folder1/file1"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder1/file1', userId: editorId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'PUT')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should allow "super" user to delete resource "/folder2/subfolder/file2"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder2/subfolder/file2', userId: superId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'DELETE')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should not allow "super" user to access "/folder3"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder3', userId: superId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'GET')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+
+    it('Should allow "root" user to delete "/folder3/file4"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder3/file4', userId: rootId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'DELETE')(reqMock, resMock, function(err) {
+        assert(!err)
         
         done()
       })
