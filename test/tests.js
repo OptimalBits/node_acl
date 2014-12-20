@@ -1170,7 +1170,7 @@ exports.middleware = function () {
         })
     })
 
-    it('Should allow "visitor" user to get resource "/folder1/341"', function (done) {
+    it('Should allow "visitor" user to access all resources under "/folder1"', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder1/341', userId: visitorId }
@@ -1182,7 +1182,7 @@ exports.middleware = function () {
       })
     })
 
-    it('Should not allow "visitor" user to update resource "/folder1/341"', function (done) {
+    it('Should not allow "visitor" user to change any resource under "/folder1"', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder1/341', userId: visitorId }
@@ -1194,7 +1194,7 @@ exports.middleware = function () {
       })
     })
 
-    it('Should allow "editor" user to update resource "/folder1/file1"', function (done) {
+    it('Should allow "editor" user to update resource under "/folder1"', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder1/file1', userId: editorId }
@@ -1206,7 +1206,7 @@ exports.middleware = function () {
       })
     })
 
-    it('Should allow "super" user to delete resource "/folder2/subfolder/file2"', function (done) {
+    it('Should allow "super" user to do anthing with "folder1" and "/folder2" and everything insdie', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder2/subfolder/file2', userId: superId }
@@ -1218,7 +1218,7 @@ exports.middleware = function () {
       })
     })
 
-    it('Should not allow "super" user to access "/folder3"', function (done) {
+    it('Should not allow "super" user to access resources in "/folder3"', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder3', userId: superId }
@@ -1230,7 +1230,7 @@ exports.middleware = function () {
       })
     })
 
-    it('Should allow "root" user to delete "/folder3/file4"', function (done) {
+    it('Should allow "root" user to do anything with any resources', function (done) {
       var acl = new Acl(this.backend, logger)
       
       var reqMock = { url: '/folder3/file4', userId: rootId }
