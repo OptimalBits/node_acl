@@ -2,6 +2,41 @@ var Acl = require('../')
   , assert = require('chai').assert
   , expect = require('chai').expect;
 
+exports.Constructor = function () {
+  describe('constructor', function () {
+    it('should use default `buckets` names', function () {
+      var acl = new Acl(this.backend)
+
+      expect(acl.options.buckets.meta).to.equal('meta')
+      expect(acl.options.buckets.parents).to.equal('parents')
+      expect(acl.options.buckets.permissions).to.equal('permissions')
+      expect(acl.options.buckets.resources).to.equal('resources')
+      expect(acl.options.buckets.roles).to.equal('roles')
+      expect(acl.options.buckets.users).to.equal('users')
+    })
+
+    it('should use given `buckets` names', function () {
+      var acl = new Acl(this.backend, null, {
+        buckets: {
+          meta: 'Meta',
+          parents: 'Parents',
+          permissions: 'Permissions',
+          resources: 'Resources',
+          roles: 'Roles',
+          users: 'Users'
+        }
+      })
+
+      expect(acl.options.buckets.meta).to.equal('Meta')
+      expect(acl.options.buckets.parents).to.equal('Parents')
+      expect(acl.options.buckets.permissions).to.equal('Permissions')
+      expect(acl.options.buckets.resources).to.equal('Resources')
+      expect(acl.options.buckets.roles).to.equal('Roles')
+      expect(acl.options.buckets.users).to.equal('Users')
+    })
+  })
+}
+
 exports.Allows = function () {
   describe('allow', function () {
 
@@ -100,13 +135,13 @@ exports.Allows = function () {
       })
     })
   })
-  
+
   describe('read Role Users', function() {
     it('run roleUsers function', function(done) {
       var acl = new Acl(this.backend)
       acl.addUserRoles('harry', 'admin', function (err) {
         if (err) return done(err);
-        
+
         acl.roleUsers('admin', function(err, users) {
           if (err) return done(err);
           assert.include(users, 'harry')
@@ -114,7 +149,7 @@ exports.Allows = function () {
           done();
         })
       })
-      
+
     })
   })
 
