@@ -1,6 +1,7 @@
 var Acl = require('../')
   , assert = require('chai').assert
-  , expect = require('chai').expect;
+  , expect = require('chai').expect
+  , logger = { debug: function(msg) { console.log(msg) } }
 
 
 exports.Allows = function () {
@@ -1042,16 +1043,19 @@ exports.i32RoleRemoval = function () {
   })
 }
 
-exports.isAnyResourceAllowed = function () {
-  describe('Multiple Resources', function () {
-    it('Assign a role permissions "perm1" to resources "res1", "res2", and "perm2" to "res3"', function (done) {
+exports.areResourcesAllowed = function () {
+  describe('Allowance of multiple resources queries', function () {
+    it('Assign roles/resources/permissions', function (done) {
       var acl = new Acl(this.backend)
 
-      acl.allow('role1', ['res1', 'res2'], ['perm1'], function (err) {
+      acl.allow('RoleA', ['res1'], ['perm1'], function (err) {
         assert(!err)
-        acl.allow('role2', 'res3', ['perm2'], function (err) {
+        acl.allow('RoleB', ['res2'], ['perm2'], function (err) {
           assert(!err)
-          done()
+          acl.allow('RoleC', ['res3'], ['perm3'], function (err) {
+            assert(!err)
+            done()
+          })
         })
       })
     })
@@ -1059,16 +1063,36 @@ exports.isAnyResourceAllowed = function () {
     it('Assign the role to user', function (done) {
       var acl = new Acl(this.backend)
 
-        acl.addUserRoles('theUser', ['role1', 'role2'], function (err) {
+        acl.addUserRoles('theUser', ['RoleA', 'RoleC'], function (err) {
           assert(!err)
           done()
         })
     })
 
-    it('User should have "perm1" to resources "res1", "res2", "res3"', function(done){
+    it('User should not have permission to resources "res2"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAnyResourceAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2'], function (err, allow) {
+      acl.areResourcesAllowed('theUser', ['res1', 'res2'], ['perm1', 'perm2'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "perm1", "perm2", and "perm3" to resources "res1", "res2", "res3"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should have "perm1" and "perm3" to resources "res1", "res2", "res3"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm3'], function (err, allow) {
         assert(!err)
         assert(allow)
         done()
@@ -1078,7 +1102,7 @@ exports.isAnyResourceAllowed = function () {
     it('User should not have "permx" to anyone of "res1", "res2", "res3"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAnyResourceAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
+      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
@@ -1088,7 +1112,7 @@ exports.isAnyResourceAllowed = function () {
     it('User should not have "perm1" to other resources', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAnyResourceAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
+      acl.areResourcesAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
@@ -1098,7 +1122,6 @@ exports.isAnyResourceAllowed = function () {
 }
 
 exports.middleware = function () {
-  var logger = { debug: function(msg) { console.log(msg) } }
   
   var resMock = function() {}
       
