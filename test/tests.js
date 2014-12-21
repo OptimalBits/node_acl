@@ -597,7 +597,7 @@ exports.HierachicalResourceAllowed = function () {
 
       acl.allow('Role_Read', ['forum:123'], ['read'], function (err) {
         assert(!err)
-        acl.allow('Role_Post', ['post:abc'], ['update'], function (err) {
+        acl.allow('Role_Update', ['post:abc'], ['update-'], function (err) {
           assert(!err)
           acl.allow('Role_Comment', ['comment:xyz'], ['hide'], function (err) {
             assert(!err)
@@ -610,26 +610,56 @@ exports.HierachicalResourceAllowed = function () {
     it('Assign the role to user', function (done) {
       var acl = new Acl(this.backend)
 
-        acl.addUserRoles('theUser', ['Role_Read', 'Role_Comment'], function (err) {
+        acl.addUserRoles('theUser', ['Role_Read', 'Role_Update', 'Role_Comment'], function (err) {
           assert(!err)
           done()
         })
     })
 
-    it('User should not have "read" and "update" permission to resources "post:abc"', function(done){
+    it('User should have "read" and "update" permission to resources "post:abc"', function(done){
       var acl = new Acl(this.backend)
 
       acl.isAllowed('theUser', ['forum:123', 'post:abc'], ['read', 'update'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should have "read" permission to resources "post:aaa"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:aaa'], ['read'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should not have "update" permission to resources "post:aaa"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:aaa'], ['update'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
       })
     })
-
-    it('User should not have "read", "update", and "comment" to resources "comment:xyz"', function(done){
+    
+    it('User should have "read", and "hide" to resources "comment:xyz"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'update', 'hide'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'hide'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+    
+    it('User should not have "update" to resources "comment:xyz"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['update'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
@@ -646,10 +676,10 @@ exports.HierachicalResourceAllowed = function () {
       })
     })
 
-    it('User should not have "read" and "admin" to "comment:xyz"', function(done){
+    it('User should not have "admin" to "comment:xyz"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'admin'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['admin'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
@@ -1137,7 +1167,6 @@ exports.middleware = function () {
       parts.pop();
     }
     resources.unshift('*')
-    console.log(resources);
     cb(undefined, resources)
   }
   
