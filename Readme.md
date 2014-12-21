@@ -391,7 +391,7 @@ __Arguments__
   
 ```javascript
     userId      {String|Number} User id.
-    resource    {String} resource to ask permissions for.
+    resource    {String|Array} resource to ask permissions for.An array represents a hierarchical structure of a resource. The resource is the last element in the  array and with its parents are on the left.
     permissions {String|Array} asked permissions.
     callback    {Function} Callback called wish the result.
 ```
