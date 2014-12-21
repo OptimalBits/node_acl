@@ -590,6 +590,84 @@ exports.Allowance = function () {
   })
 }
 
+exports.HierachicalResourceAllowed = function () {
+  describe('Allowance of hierarchical resource queries', function () {
+    it('Assign roles/resources/permissions', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.allow('RoleA', ['res1'], ['perm1'], function (err) {
+        assert(!err)
+        acl.allow('RoleB', ['res2'], ['perm2'], function (err) {
+          assert(!err)
+          acl.allow('RoleC', ['res3'], ['perm3'], function (err) {
+            assert(!err)
+            done()
+          })
+        })
+      })
+    })
+
+    it('Assign the role to user', function (done) {
+      var acl = new Acl(this.backend)
+
+        acl.addUserRoles('theUser', ['RoleA', 'RoleC'], function (err) {
+          assert(!err)
+          done()
+        })
+    })
+
+    it('User should not have permission to resources "res2"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['res1', 'res2'], ['perm1', 'perm2'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "perm1", "perm2", and "perm3" to resources "res1", "res2", "res3"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should have "perm1" and "perm3" to resources "res1", "res2", "res3"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm3'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should not have "permx" to anyone of "res1", "res2", "res3"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "perm1" to other resources', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+  })
+}
+
 
 
 
@@ -1043,84 +1121,6 @@ exports.i32RoleRemoval = function () {
   })
 }
 
-exports.areResourcesAllowed = function () {
-  describe('Allowance of multiple resources queries', function () {
-    it('Assign roles/resources/permissions', function (done) {
-      var acl = new Acl(this.backend)
-
-      acl.allow('RoleA', ['res1'], ['perm1'], function (err) {
-        assert(!err)
-        acl.allow('RoleB', ['res2'], ['perm2'], function (err) {
-          assert(!err)
-          acl.allow('RoleC', ['res3'], ['perm3'], function (err) {
-            assert(!err)
-            done()
-          })
-        })
-      })
-    })
-
-    it('Assign the role to user', function (done) {
-      var acl = new Acl(this.backend)
-
-        acl.addUserRoles('theUser', ['RoleA', 'RoleC'], function (err) {
-          assert(!err)
-          done()
-        })
-    })
-
-    it('User should not have permission to resources "res2"', function(done){
-      var acl = new Acl(this.backend)
-
-      acl.areResourcesAllowed('theUser', ['res1', 'res2'], ['perm1', 'perm2'], function (err, allow) {
-        assert(!err)
-        assert(!allow)
-        done()
-      })
-    })
-
-    it('User should not have "perm1", "perm2", and "perm3" to resources "res1", "res2", "res3"', function(done){
-      var acl = new Acl(this.backend)
-
-      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err, allow) {
-        assert(!err)
-        assert(!allow)
-        done()
-      })
-    })
-
-    it('User should have "perm1" and "perm3" to resources "res1", "res2", "res3"', function(done){
-      var acl = new Acl(this.backend)
-
-      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm3'], function (err, allow) {
-        assert(!err)
-        assert(allow)
-        done()
-      })
-    })
-
-    it('User should not have "permx" to anyone of "res1", "res2", "res3"', function(done){
-      var acl = new Acl(this.backend)
-
-      acl.areResourcesAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
-        assert(!err)
-        assert(!allow)
-        done()
-      })
-    })
-
-    it('User should not have "perm1" to other resources', function(done){
-      var acl = new Acl(this.backend)
-
-      acl.areResourcesAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
-        assert(!err)
-        assert(!allow)
-        done()
-      })
-    })
-  })
-}
-
 exports.middleware = function () {
   
   var resMock = function() {}
@@ -1133,10 +1133,11 @@ exports.middleware = function () {
     var resources = []
     var parts = req.url.split('/').slice(1)
     while(parts.length > 0) {
-      resources.push('/' + parts.join('/'))
+      resources.unshift('/' + parts.join('/'))
       parts.pop();
     }
-    resources.push('*')
+    resources.unshift('*')
+    console.log(resources);
     cb(undefined, resources)
   }
   
