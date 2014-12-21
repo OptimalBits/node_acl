@@ -595,11 +595,11 @@ exports.HierachicalResourceAllowed = function () {
     it('Assign roles/resources/permissions', function (done) {
       var acl = new Acl(this.backend)
 
-      acl.allow('RoleA', ['res1'], ['perm1'], function (err) {
+      acl.allow('Role_Read', ['forum:123'], ['read'], function (err) {
         assert(!err)
-        acl.allow('RoleB', ['res2'], ['perm2'], function (err) {
+        acl.allow('Role_Post', ['post:abc'], ['update'], function (err) {
           assert(!err)
-          acl.allow('RoleC', ['res3'], ['perm3'], function (err) {
+          acl.allow('Role_Comment', ['comment:xyz'], ['hide'], function (err) {
             assert(!err)
             done()
           })
@@ -610,56 +610,56 @@ exports.HierachicalResourceAllowed = function () {
     it('Assign the role to user', function (done) {
       var acl = new Acl(this.backend)
 
-        acl.addUserRoles('theUser', ['RoleA', 'RoleC'], function (err) {
+        acl.addUserRoles('theUser', ['Role_Read', 'Role_Comment'], function (err) {
           assert(!err)
           done()
         })
     })
 
-    it('User should not have permission to resources "res2"', function(done){
+    it('User should not have "read" and "update" permission to resources "post:abc"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['res1', 'res2'], ['perm1', 'perm2'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc'], ['read', 'update'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
       })
     })
 
-    it('User should not have "perm1", "perm2", and "perm3" to resources "res1", "res2", "res3"', function(done){
+    it('User should not have "read", "update", and "comment" to resources "comment:xyz"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm2', 'perm3'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'update', 'hide'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
       })
     })
 
-    it('User should have "perm1" and "perm3" to resources "res1", "res2", "res3"', function(done){
+    it('User should have "read" and "hide" to resources "comment:xyz"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'perm3'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'hide'], function (err, allow) {
         assert(!err)
         assert(allow)
         done()
       })
     })
 
-    it('User should not have "permx" to anyone of "res1", "res2", "res3"', function(done){
+    it('User should not have "read" and "admin" to "comment:xyz"', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['res1', 'res2', 'res3'], ['perm1', 'permx'], function (err, allow) {
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'admin'], function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
       })
     })
 
-    it('User should not have "perm1" to other resources', function(done){
+    it('User should not have "read" to other resources', function(done){
       var acl = new Acl(this.backend)
 
-      acl.isAllowed('theUser', ['resx', 'resy', 'resz'], 'perm1', function (err, allow) {
+      acl.isAllowed('theUser', ['forum:unknown', 'post:unknown'], 'read', function (err, allow) {
         assert(!err)
         assert(!allow)
         done()
