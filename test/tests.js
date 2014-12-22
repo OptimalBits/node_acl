@@ -1,6 +1,8 @@
 var Acl = require('../')
   , assert = require('chai').assert
-  , expect = require('chai').expect;
+  , expect = require('chai').expect
+  , logger = { debug: function(msg) { console.log(msg) } }
+
 
 exports.Allows = function () {
   describe('allow', function () {
@@ -588,6 +590,127 @@ exports.Allowance = function () {
   })
 }
 
+exports.HierachicalResourceAllowed = function () {
+  describe('Allowance of hierarchical resource queries', function () {
+    it('Assign roles/resources/permissions', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.allow('Role_Read', ['forum:123'], ['read'], function (err) {
+        assert(!err)
+        acl.allow('Role_Update', ['post:abc'], ['update-'], function (err) {
+          assert(!err)
+          acl.allow('Role_Comment', ['comment:xyz'], ['hide'], function (err) {
+            assert(!err)
+            acl.allow('Role_Comment', ['post:secret'], ['-read'], function (err) {
+              assert(!err)
+              done()
+            })
+          })
+        })
+      })
+    })
+
+    it('Assign the role to user', function (done) {
+      var acl = new Acl(this.backend)
+
+        acl.addUserRoles('theUser', ['Role_Read', 'Role_Update', 'Role_Comment'], function (err) {
+          assert(!err)
+          done()
+        })
+    })
+
+    it('User should have "read" and "update" permission to resources "post:abc"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc'], ['read', 'update'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should have "read" permission to resources "post:aaa"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:aaa'], ['read'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should not have "update" permission to resources "post:aaa"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:aaa'], ['update'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+    
+    it('User should have "read", and "hide" to resources "comment:xyz"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'hide'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+    
+    it('User should not have "update" to resources "comment:xyz"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['update'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should have "read" and "hide" to resources "comment:xyz"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['read', 'hide'], function (err, allow) {
+        assert(!err)
+        assert(allow)
+        done()
+      })
+    })
+
+    it('User should not have "admin" to "comment:xyz"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['admin'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "read" to "post:secret"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:secret'], 'read', function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "read" to other resources', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:unknown', 'post:unknown'], 'read', function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+  })
+}
+
 
 
 
@@ -1038,5 +1161,152 @@ exports.i32RoleRemoval = function () {
         })
       })
     })
+  })
+}
+
+exports.middleware = function () {
+  
+  var resMock = function() {}
+      
+  function getUserId(req, res) {
+    return req.userId
+  }
+  
+  function resourceBuilderSample(req, res, cb) {
+    var resources = []
+    var parts = req.url.split('/').slice(1)
+    while(parts.length > 0) {
+      resources.unshift('/' + parts.join('/'))
+      parts.pop();
+    }
+    resources.unshift('*')
+    cb(undefined, resources)
+  }
+  
+  describe('Express Middleware', function () {
+    var rootId = 'u1'
+    var superId = 'u2'
+    var editorId = 'u3'
+    var visitorId = 'u4'
+
+    it('Should reject user not authenticated', function (done) {
+      var acl = new Acl(this.backend, logger)
+      var reqMock = { url: '/res1/111' }
+      
+      acl.middleware(1, '', 'get')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 401)
+        
+        done()
+      })
+    })
+
+    it('Add roles/resources/permissions', function (done) {
+      var acl = new Acl(this.backend)
+
+      acl.allow('ROLE_ROOT', '*', '*', function (err) {
+        assert(!err)
+        acl.allow('ROLE_SUPER', ['/folder1', '/folder2'], '*', function (err) {
+          assert(!err)
+          acl.allow('ROLE_EDITOR', '/folder1/file1', 'PUT', function (err) {
+            assert(!err)
+            acl.allow('ROLE_VISITOR', '/folder1', 'GET', function (err) {
+              assert(!err)
+              done()
+            })
+          })
+        })
+      })
+    })
+
+    it('Add user roles', function (done) {
+      var acl = new Acl(this.backend)
+
+        acl.addUserRoles(rootId, 'ROLE_ROOT', function (err) {
+          assert(!err)
+          acl.addUserRoles(superId, 'ROLE_SUPER', function (err) {
+            assert(!err)
+            acl.addUserRoles(editorId, 'ROLE_EDITOR', function (err) {
+              assert(!err)
+              acl.addUserRoles(visitorId, 'ROLE_VISITOR', function (err) {
+                assert(!err)
+                done()
+              })
+            })
+          })
+        })
+    })
+
+    it('Should allow "visitor" user to access all resources under "/folder1"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder1/341', userId: visitorId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'GET')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should not allow "visitor" user to change any resource under "/folder1"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder1/341', userId: visitorId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'PUT')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+
+    it('Should allow "editor" user to update resource under "/folder1"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder1/file1', userId: editorId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'PUT')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should allow "super" user to do anthing with "folder1" and "/folder2" and everything insdie', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder2/subfolder/file2', userId: superId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'DELETE')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+
+    it('Should not allow "super" user to access resources in "/folder3"', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder3', userId: superId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'GET')(reqMock, resMock, function(err) {
+        assert(err && err.errorCode === 403)
+        
+        done()
+      })
+    })
+
+    it('Should allow "root" user to do anything with any resources', function (done) {
+      var acl = new Acl(this.backend, logger)
+      
+      var reqMock = { url: '/folder3/file4', userId: rootId }
+      
+      acl.middleware(resourceBuilderSample, getUserId, 'DELETE')(reqMock, resMock, function(err) {
+        assert(!err)
+        
+        done()
+      })
+    })
+    
   })
 }
