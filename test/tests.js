@@ -601,7 +601,10 @@ exports.HierachicalResourceAllowed = function () {
           assert(!err)
           acl.allow('Role_Comment', ['comment:xyz'], ['hide'], function (err) {
             assert(!err)
-            done()
+            acl.allow('Role_Comment', ['post:secret'], ['-read'], function (err) {
+              assert(!err)
+              done()
+            })
           })
         })
       })
@@ -680,6 +683,16 @@ exports.HierachicalResourceAllowed = function () {
       var acl = new Acl(this.backend)
 
       acl.isAllowed('theUser', ['forum:123', 'post:abc', 'comment:xyz'], ['admin'], function (err, allow) {
+        assert(!err)
+        assert(!allow)
+        done()
+      })
+    })
+
+    it('User should not have "read" to "post:secret"', function(done){
+      var acl = new Acl(this.backend)
+
+      acl.isAllowed('theUser', ['forum:123', 'post:secret'], 'read', function (err, allow) {
         assert(!err)
         assert(!allow)
         done()

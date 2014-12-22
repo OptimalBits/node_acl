@@ -391,7 +391,7 @@ __Arguments__
   
 ```javascript
     userId      {String|Number} User id.
-    resource    {String|Array} resource to ask permissions for.An array represents a hierarchical structure of a resource. The resource is the last element in the  array and with its parents are on the left.
+    resource    {String|Array} resource to ask permissions for. An array represents a hierarchical structure of a resource. The resource is the last element in the array and with its parents are on the left.
     permissions {String|Array} asked permissions.
     callback    {Function} Callback called wish the result.
 ```
@@ -448,7 +448,7 @@ To create a custom getter for userId, pass a function(req, res) which returns th
 __Arguments__
 
 ```javascript
-    numPathComponents {Number} number of components in the url to be considered part of the resource name.
+    numPathComponents {Number|Function} number of components in the url to be considered part of the resource name.
     userId            {String|Number|Function} the user id for the acl system (defaults to req.session.userId)
     permissions       {String|Array} the permission(s) to check for (defaults to req.method.toLowerCase())
 ```
