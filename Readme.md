@@ -479,7 +479,7 @@ Creates a new MongoDB backend using database instance `db`.
 
 ```javascript
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
-var redisBackend = new redisBackend(client);
+var redisBackend = new acl.redisBackend(client);
 ```
 
 Creates a new Redis backend using Redis client `client`.
