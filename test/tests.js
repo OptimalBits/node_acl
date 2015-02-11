@@ -2,6 +2,41 @@ var Acl = require('../')
   , assert = require('chai').assert
   , expect = require('chai').expect;
 
+exports.Constructor = function () {
+  describe('constructor', function () {
+    it('should use default `buckets` names', function () {
+      var acl = new Acl(this.backend)
+
+      expect(acl.options.buckets.meta).to.equal('meta')
+      expect(acl.options.buckets.parents).to.equal('parents')
+      expect(acl.options.buckets.permissions).to.equal('permissions')
+      expect(acl.options.buckets.resources).to.equal('resources')
+      expect(acl.options.buckets.roles).to.equal('roles')
+      expect(acl.options.buckets.users).to.equal('users')
+    })
+
+    it('should use given `buckets` names', function () {
+      var acl = new Acl(this.backend, null, {
+        buckets: {
+          meta: 'Meta',
+          parents: 'Parents',
+          permissions: 'Permissions',
+          resources: 'Resources',
+          roles: 'Roles',
+          users: 'Users'
+        }
+      })
+
+      expect(acl.options.buckets.meta).to.equal('Meta')
+      expect(acl.options.buckets.parents).to.equal('Parents')
+      expect(acl.options.buckets.permissions).to.equal('Permissions')
+      expect(acl.options.buckets.resources).to.equal('Resources')
+      expect(acl.options.buckets.roles).to.equal('Roles')
+      expect(acl.options.buckets.users).to.equal('Users')
+    })
+  })
+}
+
 exports.Allows = function () {
   describe('allow', function () {
 
@@ -36,7 +71,7 @@ exports.Allows = function () {
   })
 
   describe('Add user roles', function () {
-    it('joed => guest, jsmith => member, harry => admin', function (done) {
+    it('joed => guest, jsmith => member, harry => admin, test@test.com => member', function (done) {
       var acl = new Acl(this.backend)
 
       acl.addUserRoles('joed', 'guest', function (err) {
@@ -47,28 +82,32 @@ exports.Allows = function () {
 
           acl.addUserRoles('harry', 'admin', function (err) {
             assert(!err)
-            done()
+
+            acl.addUserRoles('test@test.com', 'member', function (err) {
+              assert(!err);
+              done()
+            });
           })
         })
       })
     })
 
-		it('0 => guest, 1 => member, 2 => admin', function (done) {
-			var acl = new Acl(this.backend)
+    it('0 => guest, 1 => member, 2 => admin', function (done) {
+      var acl = new Acl(this.backend)
 
-			acl.addUserRoles(0, 'guest', function (err) {
-				assert(!err)
+      acl.addUserRoles(0, 'guest', function (err) {
+        assert(!err)
 
-				acl.addUserRoles(1, 'member', function (err) {
-					assert(!err)
+        acl.addUserRoles(1, 'member', function (err) {
+          assert(!err)
 
-					acl.addUserRoles(2, 'admin', function (err) {
-						assert(!err);
-						done()
-					})
-				})
-			})
-		})
+          acl.addUserRoles(2, 'admin', function (err) {
+            assert(!err);
+            done()
+          })
+        })
+      })
+    })
   })
 
   describe('read User Roles', function() {
@@ -94,6 +133,23 @@ exports.Allows = function () {
           })
         })
       })
+    })
+  })
+
+  describe('read Role Users', function() {
+    it('run roleUsers function', function(done) {
+      var acl = new Acl(this.backend)
+      acl.addUserRoles('harry', 'admin', function (err) {
+        if (err) return done(err);
+
+        acl.roleUsers('admin', function(err, users) {
+          if (err) return done(err);
+          assert.include(users, 'harry')
+          assert.isFalse('invalid User' in users)
+          done();
+        })
+      })
+
     })
   })
 
@@ -177,7 +233,8 @@ exports.Allows = function () {
             roles:'fumanchu',
             allows:[
               {resources:'blogs', permissions:'get'},
-              {resources:['forums','news'], permissions:['get','put','delete']}
+              {resources:['forums','news'], permissions:['get','put','delete']},
+              {resources:['/path/file/file1.txt','/path/file/file2.txt'], permissions:['get','put','delete']}
             ]
           }
         ],
@@ -223,7 +280,7 @@ exports.Allowance = function () {
         })
       })
 
-			it('Can userId=0 view blogs?', function (done) {
+      it('Can userId=0 view blogs?', function (done) {
         var acl = new Acl(this.backend)
 
         acl.isAllowed(0, 'blogs', 'view', function (err, allow) {
@@ -231,7 +288,7 @@ exports.Allowance = function () {
           assert(allow)
           done()
         })
-			})
+      })
 
       it('Can joed view forums?', function (done) {
         var acl = new Acl(this.backend)
@@ -304,6 +361,37 @@ exports.Allowance = function () {
         })
       })
 
+      it('Can test@test.com edit forums?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('test@test.com', 'forums', 'edit', function (err, allow) {
+          assert(!err)
+          assert(!allow)
+          done()
+        })
+      })
+
+      it('Can test@test.com edit forums?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('test@test.com', 'forums', 'edit', function (err, allow) {
+          assert(!err)
+          assert(!allow)
+          done()
+        })
+      })
+
+
+      it('Can test@test.com edit blogs?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('test@test.com', 'blogs', 'edit', function (err, allow) {
+          assert(!err)
+          assert(allow)
+          done()
+        })
+      })
+
       it('Can userId=1 edit blogs?', function (done) {
         var acl = new Acl(this.backend)
 
@@ -324,6 +412,16 @@ exports.Allowance = function () {
         })
       })
 
+      it('Can test@test.com edit, delete and clone blogs?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('test@test.com', 'blogs', ['edit','view','clone'], function (err, allow) {
+          assert(!err)
+          assert(!allow)
+          done()
+        })
+      })
+
       it('Can userId=1 edit, delete and clone blogs?', function (done) {
         var acl = new Acl(this.backend)
 
@@ -334,10 +432,20 @@ exports.Allowance = function () {
         })
       })
 
-      it('Can jsmith edit, delete blogs?', function (done) {
+      it('Can jsmith edit, clone blogs?', function (done) {
         var acl = new Acl(this.backend)
 
         acl.isAllowed('jsmith', 'blogs', ['edit', 'clone'], function (err, allow) {
+          assert(!err)
+          assert(!allow)
+          done()
+        })
+      })
+
+      it('Can test@test.com edit, clone blogs?', function (done) {
+        var acl = new Acl(this.backend)
+
+        acl.isAllowed('test@test.com', 'blogs', ['edit', 'clone'], function (err, allow) {
           assert(!err)
           assert(!allow)
           done()
@@ -553,6 +661,12 @@ exports.WhatResources = function () {
         assert.include(resources.news, 'delete')
         assert.include(resources.news, 'get')
         assert.include(resources.news, 'put')
+        assert.include(resources['/path/file/file1.txt'], 'delete')
+        assert.include(resources['/path/file/file1.txt'], 'get')
+        assert.include(resources['/path/file/file1.txt'], 'put')
+        assert.include(resources['/path/file/file2.txt'], 'delete')
+        assert.include(resources['/path/file/file2.txt'], 'get')
+        assert.include(resources['/path/file/file2.txt'], 'put')
         done()
       })
     })
@@ -674,6 +788,16 @@ exports.RoleRemoval = function () {
       it('What permissions has jsmith over blogs and forums?', function (done) {
         var acl = new Acl(this.backend)
         acl.allowedPermissions('jsmith', ['blogs','forums'], function (err, permissions) {
+          assert(!err)
+          assert(permissions.blogs.length === 0)
+          assert(permissions.forums.length === 0)
+          done()
+        })
+      })
+
+      it('What permissions has test@test.com over blogs and forums?', function (done) {
+        var acl = new Acl(this.backend)
+        acl.allowedPermissions('test@test.com', ['blogs','forums'], function (err, permissions) {
           assert(!err)
           assert(permissions.blogs.length === 0)
           assert(permissions.forums.length === 0)
@@ -808,15 +932,15 @@ exports.UserRoleRemoval = function () {
         assert(permissions.forums.length === 0)
         done()
       })
-			it('What permissions has userId=2 over forums and blogs?', function (done) {
-				var acl = new Acl(this.backend)
-				acl.allowedPermissions(2, ['forums','blogs'], function (err, permissions) {
-					assert(!err)
-					assert.isObject(permissions)
-					assert(permissions.forums.length === 0)
-					done()
-				})
-			})
+      it('What permissions has userId=2 over forums and blogs?', function (done) {
+        var acl = new Acl(this.backend)
+        acl.allowedPermissions(2, ['forums','blogs'], function (err, permissions) {
+          assert(!err)
+          assert.isObject(permissions)
+          assert(permissions.forums.length === 0)
+          done()
+        })
+      })
     })
 
     it('What resources have "baz" some rights on after removed blogs?', function (done) {
@@ -860,6 +984,12 @@ exports.i55PermissionRemoval = function () {
         });
       }).then(function(){
         return acl.isAllowed('jannette', 'blogs', 'update', function(err, allowed){
+          expect(allowed).to.be.eql(false);
+        });
+      }).then(function(){
+        return acl.removeAllow('member', 'blogs', 'view');
+      }).then(function(){
+        return acl.isAllowed('jannette', 'blogs', 'view', function(err, allowed){
           expect(allowed).to.be.eql(false);
         });
       })

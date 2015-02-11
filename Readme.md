@@ -2,12 +2,12 @@
 
 This module provides a minimalistic ACL implementation inspired by Zend_ACL.
 
-When you develop a web site or application you will soon notice that sessions are not enough to protect all the 
-available resources. Avoiding that malicious users access other users content proves a much more 
+When you develop a web site or application you will soon notice that sessions are not enough to protect all the
+available resources. Avoiding that malicious users access other users content proves a much more
 complicated task than anticipated. ACL can solve this problem in a flexible and elegant way.
 
-Create roles and assign roles to users. Sometimes it may even be useful to create one role per user, 
-to get the finest granularity possible, while in other situations you will give the *asterisk* permission 
+Create roles and assign roles to users. Sometimes it may even be useful to create one role per user,
+to get the finest granularity possible, while in other situations you will give the *asterisk* permission
 for admin kind of functionality.
 
 A Redis, MongoDB, EJDB and In-Memory based backends are provided built-in in the module. There are other third party backends such as [*knex*](https://github.com/christophertrudel/node_acl_knex) based and [*firebase*](https://github.com/tonila/node_acl_firebase). There is also an alternative memory backend that supports [*regexps*](https://github.com/futurechan/node_acl-mem-regexp).
@@ -40,6 +40,8 @@ npm install acl
 * [addUserRoles](#addUserRoles)
 * [removeUserRoles](#removeUserRoles)
 * [userRoles](#userRoles)
+* [roleUsers](#roleUsers)
+* [hasRole](#hasRole)
 * [addRoleParents](#addRoleParents)
 * [removeRole](#removeRole)
 * [removeResource](#removeResource)
@@ -72,7 +74,7 @@ acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
 acl = new acl(new acl.ejdbBackend(dbInstance, prefix));
 ```
 
-All the following functions return a promise or optionally take a callback with 
+All the following functions return a promise or optionally take a callback with
 an err parameter as last parameter. We omit them in the examples for simplicity.
 
 Create roles implicitly by giving them permissions:
@@ -114,20 +116,20 @@ lead to unnecessary nested callbacks for handling errors. Instead use the follow
 
 ```javascript
 acl.allow([
-	{
-		roles:['guest','member'], 
-		allows:[
-			{resources:'blogs', permissions:'get'},
-			{resources:['forums','news'], permissions:['get','put','delete']}
-		]
-	},
-	{
-		roles:['gold','silver'], 
-		allows:[
-			{resources:'cash', permissions:['sell','exchange']},
-			{resources:['account','deposit'], permissions:['put','delete']}
-		]
-	}
+    {
+        roles:['guest','member'],
+        allows:[
+            {resources:'blogs', permissions:'get'},
+            {resources:['forums','news'], permissions:['get','put','delete']}
+        ]
+    },
+    {
+        roles:['gold','silver'],
+        allows:[
+            {resources:'cash', permissions:['sell','exchange']},
+            {resources:['account','deposit'], permissions:['put','delete']}
+        ]
+    }
 ])
 ```
 
@@ -135,9 +137,9 @@ You can check if a user has permissions to access a given resource with *isAllow
 
 ```javascript
 acl.isAllowed('joed', 'blogs', 'view', function(err, res){
-	if(res){
-		console.log("User joed is allowed to view blogs")
-	}
+    if(res){
+        console.log("User joed is allowed to view blogs")
+    }
 }
 ```
 
@@ -155,7 +157,7 @@ Sometimes is necessary to know what permissions a given user has over certain re
 
 ```javascript
 acl.allowedPermissions('james', ['blogs','forums'], function(err, permissions){
-	console.log(permissions)
+    console.log(permissions)
 })
 ```
 
@@ -167,7 +169,7 @@ It will return an array of resource:[permissions] like this:
 ```
 
 
-Finally, we provide a middleware for Express for easy protection of resources. 
+Finally, we provide a middleware for Express for easy protection of resources.
 
 ```javascript
 acl.middleware()
@@ -185,7 +187,7 @@ The middleware will protect the resource named by *req.url*, pick the user from 
 acl.isAllowed(req.session.userId, '/blogs/12345', 'put')
 ```
 
-The middleware accepts 3 optional arguments, that are useful in some situations. For example, sometimes we 
+The middleware accepts 3 optional arguments, that are useful in some situations. For example, sometimes we
 cannot consider the whole url as the resource:
 
 ```javascript
@@ -208,7 +210,7 @@ app.put('/blogs/:id/comments/:commentId', acl.middleware(3, 'joed', 'post'), fun
 Adds roles to a given user id.
 
 __Arguments__
- 
+
 ```javascript
     userId   {String|Number} User id.
     roles    {String|Array} Role(s) to add to the user id.
@@ -219,7 +221,7 @@ __Arguments__
 
 <a name="removeUserRoles"/>
 ### removeUserRoles( userId, roles, function(err) )
-  
+
 Remove roles from a given user.
 
 __Arguments__
@@ -238,9 +240,23 @@ __Arguments__
 Return all the roles from a given user.
 
 __Arguments__
-  
+
 ```javascript
     userId   {String|Number} User id.
+    callback {Function} Callback called when finished.
+```
+
+---------------------------------------
+
+<a name="roleUsers" />
+### roleUsers( rolename, function(err, roles) )
+
+Return all users who has a given role.
+
+__Arguments__
+
+```javascript
+    rolename   {String|Number} User id.
     callback {Function} Callback called when finished.
 ```
 
@@ -252,7 +268,7 @@ __Arguments__
 Return boolean whether user has the role
 
 __Arguments__
-  
+
 ```javascript
     userId   {String|Number} User id.
     rolename {String|Number} role name.
@@ -278,11 +294,11 @@ __Arguments__
 
 <a name="removeRole" />
 ### removeRole( role, function(err) )
-  
+
 Removes a role from the system.
 
 __Arguments__
-  
+
 ```javascript
     role     {String} Role to be removed
     callback {Function} Callback called when finished.
@@ -292,11 +308,11 @@ __Arguments__
 
 <a name="removeResource" />
 ### removeResource( resource, function(err) )
-  
+
 Removes a resource from the system
 
 __Arguments__
-  
+
 ```javascript
     resource {String} Resource to be removed
     callback {Function} Callback called when finished.
@@ -310,7 +326,7 @@ __Arguments__
 Adds the given permissions to the given roles over the given resources.
 
 __Arguments__
-  
+
 ```javascript
     roles       {String|Array} role(s) to add permissions to.
     resources   {String|Array} resource(s) to add permisisons to.
@@ -319,13 +335,13 @@ __Arguments__
 ```
 
 ### allow( permissionsArray, function(err) )
-  
+
 __Arguments__
 
 ```javascript
     permissionsArray {Array} Array with objects expressing what permissions to give.
        [{roles:{String|Array}, allows:[{resources:{String|Array}, permissions:{String|Array}]]
-  
+
     callback         {Function} Callback called when finished.
 ```
 
@@ -339,7 +355,7 @@ Remove permissions from the given roles owned by the given role.
 Note: we loose atomicity when removing empty role_resources.
 
 __Arguments__
-  
+
 ```javascript
     role        {String}
     resources   {String|Array}
@@ -354,12 +370,12 @@ __Arguments__
 
 Returns all the allowable permissions a given user have to
 access the given resources.
-  
-It returns an array of objects where every object maps a 
+
+It returns an array of objects where every object maps a
 resource name to a list of permissions for that resource.
 
 __Arguments__
-  
+
 ```javascript
     userId    {String|Number} User id.
     resources {String|Array} resource(s) to ask permissions for.
@@ -370,12 +386,12 @@ __Arguments__
 
 <a name="isAllowed" />
 ### isAllowed( userId, resource, permissions, function(err, allowed) )
-  
-Checks if the given user is allowed to access the resource for the given 
+
+Checks if the given user is allowed to access the resource for the given
 permissions (note: it must fulfill all the permissions).
 
 __Arguments__
-  
+
 ```javascript
     userId      {String|Number} User id.
     resource    {String} resource to ask permissions for.
@@ -386,11 +402,11 @@ __Arguments__
 ---------------------------------------
 <a name="areAnyRolesAllowed" />
 ### areAnyRolesAllowed( roles, resource, permissions, function(err, allowed) )
-  
+
 Returns true if any of the given roles have the right permissions.
 
 __Arguments__
-  
+
 ```javascript
     roles       {String|Array} Role(s) to check the permissions for.
     resource    {String} resource to ask permissions for.
@@ -412,11 +428,11 @@ __Arguments__
 ```
 
 whatResources(role, permissions, function(err, resources) )
-    
+
 Returns what resources a role has the given permissions over.
 
 __Arguments__
-  
+
 ```javascript
     role        {String|Array} Roles
     permissions {String|Array} Permissions
@@ -450,23 +466,23 @@ Creates a backend instance. All backends except Memory require driver or databas
 __Arguments__
 
 ```javascript
-    db 		  {Object} Database instance
-    prefix 	  {String} Optional collection prefix
-    useSingle 	  {Boolean} Create one collection for all resources (defaults to false)
+    db        {Object} Database instance
+    prefix    {String} Optional collection prefix
+    useSingle     {Boolean} Create one collection for all resources (defaults to false)
 ```
 
 ```javascript
-var mongodb = require('mongodb'); 
+var mongodb = require('mongodb');
 mongodb.connect("mongodb://127.0.0.1:27017/acltest", function(error, db) {
   var mongoBackend = new acl.mongodbBackend(db, 'acl_');
-});   
+});
 ```
 
 Creates a new MongoDB backend using database instance `db`.
 
 ```javascript
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
-var redisBackend = new redisBackend(client);
+var redisBackend = new acl.redisBackend(client);
 ```
 
 Creates a new Redis backend using Redis client `client`.
@@ -492,7 +508,7 @@ Run tests with `npm` (requires mocha):
 - Support for denials (deny a role a given permission)
 
 
-##License 
+##License
 
 (The MIT License)
 
