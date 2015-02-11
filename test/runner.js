@@ -34,6 +34,25 @@ describe('MongoDB - useSingle', function () {
   run()
 });
 
+describe('EJDB - useSingle', function () {
+
+  before(function (done) {
+    var self = this;
+    
+    var EJDB = require('ejdb');
+    // Init and open DB
+    var dbpath = '.';
+    var dbname = dbpath+'/acl.db';
+    var jb = EJDB.open(dbname, EJDB.DEFAULT_OPEN_MODE);
+    
+    var EJDBBackend = require('../lib/ejdb-backend.js');
+    self.backend = new EJDBBackend(jb);
+    done()
+  })
+
+  run()
+});
+
 describe('Redis', function () {
   before(function (done) {
     var self = this

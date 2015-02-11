@@ -67,6 +67,9 @@ acl = new acl(new acl.memoryBackend());
 
 // Or Using the mongodb backend
 acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
+
+// Or Using the ejdb backend
+acl = new acl(new acl.ejdbBackend(dbInstance, prefix));
 ```
 
 All the following functions return a promise or optionally take a callback with 
@@ -467,6 +470,15 @@ var redisBackend = new redisBackend(client);
 ```
 
 Creates a new Redis backend using Redis client `client`.
+
+```javascript
+var EJDB = require('ejdb');
+var jb = EJDB.open('acl.db', EJDB.DEFAULT_OPEN_MODE);
+
+var ejdbBackend = new acl.ejdbBackend(jb);
+```
+
+Creates a new EJDB backend.
 
 ##Tests
 

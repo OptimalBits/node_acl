@@ -18,13 +18,13 @@
     "async": "~0.2.9",
     "bluebird": "^2.2.2",
     "lodash": "~2.4.1",
-    "mocha": "^1.21.3",
     "mongodb": "*",
     "redis": ">= 0.7.1"
   },
   "devDependencies": {
-    "mocha": "~1.12",
-    "chai": "~1.7.2"
+    "chai": "~1.7.2",
+    "ejdb": "^1.1.37",
+    "mocha": "^1.21.3"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
