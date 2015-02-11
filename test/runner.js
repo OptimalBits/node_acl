@@ -41,7 +41,7 @@ describe('EJDB - useSingle', function () {
     
     var EJDB = require('ejdb');
     // Init and open DB
-    var dbpath = '.';
+    var dbpath = './test';
     var dbname = dbpath+'/acl.db';
     var jb = EJDB.open(dbname, EJDB.DEFAULT_OPEN_MODE);
     
