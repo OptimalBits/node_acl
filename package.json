@@ -22,6 +22,7 @@
     "redis": ">=0.12.1"
   },
   "devDependencies": {
+    "ejdb": "^1.1.26",
     "mocha": "^2.0.1",
     "chai": "~1.10.0"
   },

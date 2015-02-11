@@ -10,7 +10,7 @@ Create roles and assign roles to users. Sometimes it may even be useful to creat
 to get the finest granularity possible, while in other situations you will give the *asterisk* permission
 for admin kind of functionality.
 
-A Redis, MongoDB and In-Memory based backends are provided built-in in the module. There are other third party backends such as [*knex*](https://github.com/christophertrudel/node_acl_knex) based and [*firebase*](https://github.com/tonila/node_acl_firebase). There is also an alternative memory backend that supports [*regexps*](https://github.com/futurechan/node_acl-mem-regexp).
+A Redis, MongoDB, EJDB and In-Memory based backends are provided built-in in the module. There are other third party backends such as [*knex*](https://github.com/christophertrudel/node_acl_knex) based and [*firebase*](https://github.com/tonila/node_acl_firebase). There is also an alternative memory backend that supports [*regexps*](https://github.com/futurechan/node_acl-mem-regexp).
 
 Follow [manast](http://twitter.com/manast) for news and updates regarding this library.
 
@@ -69,6 +69,9 @@ acl = new acl(new acl.memoryBackend());
 
 // Or Using the mongodb backend
 acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
+
+// Or Using the ejdb backend
+acl = new acl(new acl.ejdbBackend(dbInstance, prefix));
 ```
 
 All the following functions return a promise or optionally take a callback with
@@ -483,6 +486,15 @@ var redisBackend = new acl.redisBackend(client);
 ```
 
 Creates a new Redis backend using Redis client `client`.
+
+```javascript
+var EJDB = require('ejdb');
+var jb = EJDB.open('acl.db', EJDB.DEFAULT_OPEN_MODE);
+
+var ejdbBackend = new acl.ejdbBackend(jb);
+```
+
+Creates a new EJDB backend.
 
 ##Tests
 
