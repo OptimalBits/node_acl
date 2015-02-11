@@ -49,6 +49,10 @@ describe('EJDB - useSingle', function () {
     self.backend = new EJDBBackend(jb);
     done()
   })
+  
+  after(function() {
+    this.backend.sync()
+  })
 
   run()
 });
