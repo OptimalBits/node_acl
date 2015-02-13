@@ -337,7 +337,7 @@ __Arguments__
 
 ```javascript
     permissionsArray {Array} Array with objects expressing what permissions to give.
-       [{roles:{String|Array}, allows:[{resources:{String|Array}, permissions:{String|Array}]]
+       [{roles:{String|Array}, allows: {resources:{String|Array}, permissions:{String|Array}} ]
 
     callback         {Function} Callback called when finished.
 ```
