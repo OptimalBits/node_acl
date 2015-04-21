@@ -17,6 +17,7 @@
   "dependencies": {
     "async": "~0.9.0",
     "bluebird": "^2.3.11",
+    "cassandra-driver": "^2.0.1",
     "lodash": "~2.4.1",
     "mongodb": "^1.4.30",
     "redis": ">=0.12.1"
