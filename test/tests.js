@@ -866,6 +866,7 @@ exports.ResourceRemoval = function () {
       var acl = new Acl(this.backend)
       acl.whatResources('baz', function (err, resources) {
         assert(!err)
+        assert.isObject(resources)
         assert(Object.keys(resources).length === 0)
 
         done()
@@ -940,26 +941,6 @@ exports.UserRoleRemoval = function () {
           assert(permissions.forums.length === 0)
           done()
         })
-      })
-    })
-
-    it('What resources have "baz" some rights on after removed blogs?', function (done) {
-      var acl = new Acl(this.backend)
-      acl.whatResources('baz', function (err, permissions) {
-        assert(!err)
-        assert.isObject(permissions)
-        assert(Object.keys(permissions).length === 0)
-        done()
-      })
-    })
-
-    it('What resources have "admin" some rights on after removed users resource?', function (done) {
-      var acl = new Acl(this.backend)
-      acl.whatResources('admin', function (err, resources) {
-        assert(!err)
-        assert.isFalse('users' in resources)
-        assert.isFalse('blogs' in resources)
-        done()
       })
     })
   })
