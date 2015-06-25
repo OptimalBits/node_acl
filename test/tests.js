@@ -822,6 +822,132 @@ exports.RoleRemoval = function () {
 
 
 
+exports.RoleParentRemoval = function () {
+  describe('RoleParentRemoval', function () {
+    before(function (done) {
+      var acl = new Acl(this.backend);
+      acl.allow('parent1', 'x', 'read1')
+        .then(function () { return acl.allow('parent2', 'x', 'read2'); })
+        .then(function () { return acl.allow('parent3', 'x', 'read3'); })
+        .then(function () { return acl.allow('parent4', 'x', 'read4'); })
+        .then(function () { return acl.allow('parent5', 'x', 'read5'); })
+        .then(function () {
+          return acl.addRoleParents('child', ['parent1', 'parent2', 'parent3', 'parent4', 'parent5']);
+        })
+        .done(done, done);
+    });
+
+    var acl;
+
+    beforeEach(function () {
+      acl = new Acl(this.backend);
+    });
+
+    it('Environment check', function (done) {
+      acl.whatResources('child')
+          .then(function (resources) {
+            assert.lengthOf(resources.x, 5);
+            assert.include(resources.x, 'read1');
+            assert.include(resources.x, 'read2');
+            assert.include(resources.x, 'read3');
+            assert.include(resources.x, 'read4');
+            assert.include(resources.x, 'read5');
+          })
+          .done(done, done);
+    });
+
+    it('Operation uses a callback when removing a specific parent role', function (done) {
+      acl.removeRoleParents('child', 'parentX', function (err) {
+        assert(!err);
+        done();
+      });
+    });
+
+    it('Operation uses a callback when removing multiple specific parent roles', function (done) {
+      acl.removeRoleParents('child', ['parentX', 'parentY'], function (err) {
+        assert(!err);
+        done();
+      });
+    });
+
+    it('Remove parent role "parentX" from role "child"', function (done) {
+      acl.removeRoleParents('child', 'parentX')
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.lengthOf(resources.x, 5);
+          assert.include(resources.x, 'read1');
+          assert.include(resources.x, 'read2');
+          assert.include(resources.x, 'read3');
+          assert.include(resources.x, 'read4');
+          assert.include(resources.x, 'read5');
+        })
+        .done(done, done);
+    });
+
+    it('Remove parent role "parent1" from role "child"', function (done) {
+      acl.removeRoleParents('child', 'parent1')
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.lengthOf(resources.x, 4);
+          assert.include(resources.x, 'read2');
+          assert.include(resources.x, 'read3');
+          assert.include(resources.x, 'read4');
+          assert.include(resources.x, 'read5');
+        })
+        .done(done, done);
+    });
+
+    it('Remove parent roles "parent2" & "parent3" from role "child"', function (done) {
+      acl.removeRoleParents('child', ['parent2', 'parent3'])
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.lengthOf(resources.x, 2);
+          assert.include(resources.x, 'read4');
+          assert.include(resources.x, 'read5');
+        })
+        .done(done, done);
+    });
+
+    it('Remove all parent roles from role "child"', function (done) {
+      acl.removeRoleParents('child')
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.notProperty(resources, 'x');
+        })
+        .done(done, done);
+    });
+
+    it('Remove all parent roles from role "child" with no parents', function (done) {
+      acl.removeRoleParents('child')
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.notProperty(resources, 'x');
+        })
+        .done(done, done);
+    });
+
+    it('Remove parent role "parent1" from role "child" with no parents', function (done) {
+      acl.removeRoleParents('child', 'parent1')
+        .then(function () { return acl.whatResources('child'); })
+        .then(function (resources) {
+          assert.notProperty(resources, 'x');
+        })
+        .done(done, done);
+    });
+
+    it('Operation uses a callback when removing all parent roles', function (done) {
+      acl.removeRoleParents('child', function (err) {
+        assert(!err);
+        done();
+      });
+    });
+  });
+};
+
+
+
+
+
 exports.ResourceRemoval = function () {
   describe('removeResource', function () {
     it('Remove resource blogs', function (done) {
