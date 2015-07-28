@@ -247,7 +247,7 @@ __Arguments__
 ---------------------------------------
 
 <a name="roleUsers" />
-### roleUsers( rolename, function(err, roles) )
+### roleUsers( rolename, function(err, users) )
 
 Return all users who has a given role.
 
