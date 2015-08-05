@@ -413,7 +413,7 @@ __Arguments__
     userId      {String|Number} User id.
     resource    {String} resource to ask permissions for.
     permissions {String|Array} asked permissions.
-    callback    {Function} Callback called wish the result.
+    callback    {Function} Callback called with the result.
 ```
 
 ---------------------------------------
@@ -428,7 +428,7 @@ __Arguments__
     roles       {String|Array} Role(s) to check the permissions for.
     resource    {String} resource to ask permissions for.
     permissions {String|Array} asked permissions.
-    callback    {Function} Callback called wish the result.
+    callback    {Function} Callback called with the result.
 ```
 
 ---------------------------------------
@@ -453,7 +453,7 @@ __Arguments__
 ```javascript
     role        {String|Array} Roles
     permissions {String|Array} Permissions
-    callback    {Function} Callback called wish the result.
+    callback    {Function} Callback called with the result.
 ```
 
 ---------------------------------------
