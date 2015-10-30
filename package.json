@@ -15,15 +15,15 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "async": "~1.4.0",
-    "bluebird": "^2.9.34",
-    "lodash": "~3.10.0",
-    "mongodb": "^2.0.39",
-    "redis": ">=0.12.1"
+    "async": "^1.5.0",
+    "bluebird": "^3.0.2",
+    "lodash": "^3.10.1",
+    "mongodb": "^2.0.47",
+    "redis": "^2.2.5"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "chai": "~3.2.0"
+    "mocha": "^2.3.3",
+    "chai": "^3.4.0"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
