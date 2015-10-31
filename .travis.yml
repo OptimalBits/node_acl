@@ -1,11 +1,10 @@
 language: node_js
+sudo: false
 
-# test on two node.js versions: 0.10
 node_js:
   - '0.10'
   - '0.12'
-  - 'iojs-v1'
-  - 'iojs-v2'
+  - 'stable'
 
 services:
   - redis-server
