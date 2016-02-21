@@ -822,6 +822,50 @@ exports.RoleRemoval = function () {
 
 
 
+exports.ResourceByRoleRemoval = function () {
+  describe('removeResourceByRole', function () {
+    it('Remove resource blogs by role guest', function (done) {
+      var acl = new Acl(this.backend)
+      acl.removeResourceByRole('guest', 'blogs', function (err) {
+        assert(!err)
+        done()
+      })
+    })
+
+    it('Remove resource users by role admin', function (done) {
+      var acl = new Acl(this.backend)
+      acl.removeResourceByRole('admin', 'users', function (err) {
+        assert(!err)
+        done()
+      })
+    })
+  })
+
+  describe('whatResources', function () {
+    it('What resources have "guest" some rights on after removed blogs resource?', function (done) {
+      var acl = new Acl(this.backend)
+      acl.whatResources('guest', function (err, resources) {
+        assert(!err)
+        assert.isFalse('blogs' in resources)
+        done()
+      })
+    })
+
+    it('What resources have "admin" some rights on after removed users resource?', function (done) {
+      var acl = new Acl(this.backend)
+      acl.whatResources('admin', function (err, resources) {
+        assert(!err)
+        assert.isFalse('users' in resources)
+        done()
+      })
+    })
+  })
+}
+
+
+
+
+
 exports.ResourceRemoval = function () {
   describe('removeResource', function () {
     it('Remove resource blogs', function (done) {
