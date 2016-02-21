@@ -45,6 +45,7 @@ npm install acl
 * [addRoleParents](#addRoleParents)
 * [removeRole](#removeRole)
 * [removeResource](#removeResource)
+* [removeResourceByRole](#removeResourceByRole)
 * [allow](#allow)
 * [removeAllow](#removeAllow)
 * [allowedPermissions](#allowedPermissions)
@@ -311,6 +312,21 @@ Removes a resource from the system
 __Arguments__
 
 ```javascript
+    resource {String} Resource to be removed
+    callback {Function} Callback called when finished.
+```
+
+---------------------------------------
+
+<a name="removeResourceByRole" />
+### removeResourceByRole( role, resource, function(err) )
+
+Removes a resource by role from the system
+
+__Arguments__
+
+```javascript
+    role {String} Role of resource
     resource {String} Resource to be removed
     callback {Function} Callback called when finished.
 ```
