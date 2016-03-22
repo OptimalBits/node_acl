@@ -619,6 +619,17 @@ exports.Allowance = function () {
           done()
         })
       })
+      it('What permissions has nonsenseUser over blogs and forums?', function (done) {
+        var acl = new Acl(this.backend)
+        acl.allowedPermissions('nonsense', ['blogs','forums'], function (err, permissions) {
+          assert(!err)
+
+          assert(permissions.forums.length === 0)
+          assert(permissions.blogs.length === 0)
+
+          done()
+        })
+      })
     })
   })
 }
