@@ -5,23 +5,25 @@ var _ = require('lodash');
 
 var testData = {
   key1: ["1", "2", "3"],
-  key2: ["4", "5", "6"],
-  key3: ["7", "8", "9"]
+  key2: ["3", "2", "4"],
+  key3: ["3", "4", "5"]
 };
-var bucket = 'test-bucket';
+var buckets = ['bucket1', 'bucket2'];
 
-exports.getAll = function() {
-  describe('getAll', function() {
+exports.unions = function() {
+  describe('unions', function() {
     before(function(done) {
       var backend = this.backend;
-      if (!backend.getAll) {
+      if (!backend.unions) {
         this.skip();
       }
 
       backend.clean(function() {
         var transaction = backend.begin();
         Object.keys(testData).forEach(function(key) {
-          backend.add(transaction, bucket, key, testData[key]);
+          buckets.forEach(function(bucket) {
+            backend.add(transaction, bucket, key, testData[key]);
+          });
         });
         backend.end(transaction, done);
       });
@@ -32,25 +34,36 @@ exports.getAll = function() {
     });
 
     it('should respond with an appropriate map', function(done) {
-      this.backend.getAll(bucket, Object.keys(testData), function(err, result) {
+      var expected = {
+        'bucket1': ["1", "2", "3", "4", "5"],
+        'bucket2': ["1", "2", "3", "4", "5"]
+      };
+      this.backend.unions(buckets, Object.keys(testData), function(err, result) {
         expect(err).to.be.null;
-        expect(result).to.be.eql(testData);
+        expect(result).to.be.eql(expected);
         done();
       });
     });
 
     it('should get only the specified keys', function(done) {
-      this.backend.getAll(bucket, ['key1'], function(err, result) {
+      var expected = {
+        'bucket1': ['1', '2', '3'],
+        'bucket2': ['1', '2', '3']
+      }
+      this.backend.unions(buckets, ['key1'], function(err, result) {
         expect(err).to.be.null;
-        expect(result).to.be.eql(_.pick(testData, 'key1'));
+        expect(result).to.be.eql(expected);
         done();
       });
     });
 
-    it('should be order-independent', function(done) {
-      this.backend.getAll(bucket, Object.keys(testData).reverse(), function(err, result) {
+    it('should only get the specified buckets', function(done) {
+      var expected = {
+        'bucket1': ['1', '2', '3']
+      };
+      this.backend.unions(['bucket1'], ['key1'], function(err, result) {
         expect(err).to.be.null;
-        expect(result).to.be.eql(testData);
+        expect(result).to.be.eql(expected);
         done();
       });
     });
