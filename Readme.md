@@ -140,7 +140,7 @@ acl.isAllowed('joed', 'blogs', 'view', function(err, res){
     if(res){
         console.log("User joed is allowed to view blogs")
     }
-}
+})
 ```
 
 
