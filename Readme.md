@@ -156,16 +156,18 @@ Note that all permissions must be full filed in order to get *true*.
 Sometimes is necessary to know what permissions a given user has over certain resources:
 
 ```javascript
-acl.allowedPermissions('james', ['blogs','forums'], function(err, permissions){
+acl.allowedPermissions('joed', ['blogs','forums'], function(err, permissions){
     console.log(permissions)
 })
 ```
 
-It will return an array of resource:[permissions] like this:
+It will return an object of resource:[permissions] like this:
 
 ```javascript
-[{'blogs' : ['get','delete']},
- {'forums':['get','put']}]
+{ 
+    blogs: [ 'get', 'view' ], 
+    forums: [ 'get', 'put', 'delete' ] 
+}
 ```
 
 
@@ -178,7 +180,7 @@ acl.middleware()
 We can protect a resource like this:
 
 ```javascript
-app.put('/blogs/:id', acl.middleware(), function(req, res, next){…}
+app.put('/blogs/:id', acl.middleware(), function(req, res, next){…})
 ```
 
 The middleware will protect the resource named by *req.url*, pick the user from *req.session.userId* and check the permission for *req.method*, so the above would be equivalent to something like this:
@@ -191,7 +193,7 @@ The middleware accepts 3 optional arguments, that are useful in some situations.
 cannot consider the whole url as the resource:
 
 ```javascript
-app.put('/blogs/:id/comments/:commentId', acl.middleware(3), function(req, res, next){…}
+app.put('/blogs/:id/comments/:commentId', acl.middleware(3), function(req, res, next){…})
 ```
 
 In this case the resource will be just the three first components of the url (without the ending slash).
@@ -199,7 +201,7 @@ In this case the resource will be just the three first components of the url (wi
 It is also possible to add a custom userId or check for other permissions than the method:
 
 ```javascript
-app.put('/blogs/:id/comments/:commentId', acl.middleware(3, 'joed', 'post'), function(req, res, next){…}
+app.put('/blogs/:id/comments/:commentId', acl.middleware(3, 'joed', 'post'), function(req, res, next){…})
 ```
 
 ## Methods
