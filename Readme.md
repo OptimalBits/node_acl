@@ -84,7 +84,7 @@ Create roles implicitly by giving them permissions:
 acl.allow('guest', 'blogs', 'view')
 
 // allow function accepts arrays as any parameter
-acl.allow('member', 'blogs', ['edit','view', 'delete'])
+acl.allow('member', 'blogs', ['edit', 'view', 'delete'])
 ```
 
 Users are likewise created implicitly by assigning them roles:
@@ -96,19 +96,19 @@ acl.addUserRoles('joed', 'guest')
 Hierarchies of roles can be created by assigning parents to roles:
 
 ```javascript
-acl.addRoleParents('baz', ['foo','bar'])
+acl.addRoleParents('baz', ['foo', 'bar'])
 ```
 
 Note that the order in which you call all the functions is irrelevant (you can add parents first and assign permissions to roles later)
 
 ```javascript
-acl.allow('foo', ['blogs','forums','news'], ['view', 'delete'])
+acl.allow('foo', ['blogs', 'forums', 'news'], ['view', 'delete'])
 ```
 
 Use the wildcard to give all permissions:
 
 ```javascript
-acl.allow('admin', ['blogs','forums'], '*')
+acl.allow('admin', ['blogs', 'forums'], '*')
 ```
 
 Sometimes is necessary to set permissions on many different roles and resources. This would
@@ -117,17 +117,17 @@ lead to unnecessary nested callbacks for handling errors. Instead use the follow
 ```javascript
 acl.allow([
     {
-        roles:['guest','member'],
+        roles:['guest', 'member'],
         allows:[
             {resources:'blogs', permissions:'get'},
-            {resources:['forums','news'], permissions:['get','put','delete']}
+            {resources:['forums', 'news'], permissions:['get', 'put', 'delete']}
         ]
     },
     {
-        roles:['gold','silver'],
+        roles:['gold', 'silver'],
         allows:[
-            {resources:'cash', permissions:['sell','exchange']},
-            {resources:['account','deposit'], permissions:['put','delete']}
+            {resources:'cash', permissions:['sell', 'exchange']},
+            {resources:['account', 'deposit'], permissions:['put', 'delete']}
         ]
     }
 ])
@@ -147,7 +147,7 @@ acl.isAllowed('joed', 'blogs', 'view', function(err, res){
 Of course arrays are also accepted in this function:
 
 ```javascript
-acl.isAllowed('jsmith', 'blogs', ['edit','view','delete'])
+acl.isAllowed('jsmith', 'blogs', ['edit', 'view', 'delete'])
 ```
 
 Note that all permissions must be full filed in order to get *true*.
@@ -156,7 +156,7 @@ Note that all permissions must be full filed in order to get *true*.
 Sometimes is necessary to know what permissions a given user has over certain resources:
 
 ```javascript
-acl.allowedPermissions('james', ['blogs','forums'], function(err, permissions){
+acl.allowedPermissions('james', ['blogs', 'forums'], function(err, permissions){
     console.log(permissions)
 })
 ```
@@ -164,8 +164,8 @@ acl.allowedPermissions('james', ['blogs','forums'], function(err, permissions){
 It will return an array of resource:[permissions] like this:
 
 ```javascript
-[{'blogs' : ['get','delete']},
- {'forums':['get','put']}]
+[{'blogs' : ['get', 'delete']},
+ {'forums':['get', 'put']}]
 ```
 
 
