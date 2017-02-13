@@ -1,6 +1,6 @@
 {
   "name": "acl",
-  "version": "0.4.7",
+  "version": "0.4.10",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
     "middleware",
@@ -15,15 +15,15 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "async": "~0.9.0",
-    "bluebird": "^2.3.11",
-    "lodash": "~2.4.1",
-    "mongodb": "^1.4.30",
-    "redis": ">=0.12.1"
+    "async": "^2.1.4",
+    "bluebird": "^3.0.2",
+    "lodash": "^4.17.3",
+    "mongodb": "^2.0.47",
+    "redis": "^2.2.5"
   },
   "devDependencies": {
-    "mocha": "^2.0.1",
-    "chai": "~1.10.0"
+    "mocha": "^3.2.0",
+    "chai": "^3.4.0"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
