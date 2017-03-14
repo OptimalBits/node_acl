@@ -150,7 +150,7 @@ Of course arrays are also accepted in this function:
 acl.isAllowed('jsmith', 'blogs', ['edit', 'view', 'delete'])
 ```
 
-Note that all permissions must be full filed in order to get *true*.
+Note that all permissions must be fulfilled in order to get *true*.
 
 
 Sometimes is necessary to know what permissions a given user has over certain resources:
