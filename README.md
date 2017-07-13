@@ -33,8 +33,10 @@ Follow [manast](http://twitter.com/manast) for news and updates regarding this l
 
 Using npm:
 
-```javascript
+```bash
 npm install acl
+# Install redis or mongo if needed
+npm install redis mongo
 ```
 
 ##Documentation
