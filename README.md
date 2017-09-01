@@ -29,7 +29,7 @@ Follow [manast](http://twitter.com/manast) for news and updates regarding this l
 - Express middleware for protecting resources.
 - Robust implementation with good unit test coverage.
 
-##Installation
+## Installation
 
 Using npm:
 
@@ -37,7 +37,7 @@ Using npm:
 npm install acl
 ```
 
-##Documentation
+## Documentation
 
 * [addUserRoles](#addUserRoles)
 * [removeUserRoles](#removeUserRoles)
