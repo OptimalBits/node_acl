@@ -536,7 +536,7 @@ Run tests with `npm` (requires mocha):
 
 (The MIT License)
 
-Copyright (c) 2011-2013 Manuel Astudillo <manuel@optimalbits.com>
+Copyright (c) 2011-2017 Manuel Astudillo <manuel@optimalbits.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
