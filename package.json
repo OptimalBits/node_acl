@@ -1,7 +1,7 @@
 {
   "name": "acl",
   "version": "0.4.11",
-  "description": "An Access Control List module, based on Redis with Express middleware support",
+  "description": "An Access Control List module, based on Redis with Express/KOA middleware support",
   "keywords": [
     "middleware",
     "acl",

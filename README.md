@@ -26,7 +26,7 @@ Follow [manast](http://twitter.com/manast) for news and updates regarding this l
 - Roles
 - Hierarchies
 - Resources
-- Express middleware for protecting resources.
+- Express/KOA middleware for protecting resources.
 - Robust implementation with good unit test coverage.
 
 ## Installation
@@ -169,10 +169,12 @@ It will return an array of resource:[permissions] like this:
 ```
 
 
-Finally, we provide a middleware for Express for easy protection of resources.
+Finally, we provide a middleware for Express/KOA for easy protection of resources.
 
 ```javascript
 acl.middleware()
+acl.middleware(0, '', '' true) // KOA
+acl.middleware(0, '', '' true, function (err, ctx, next) { }) // KOA
 ```
 
 We can protect a resource like this:
@@ -474,9 +476,9 @@ __Arguments__
 
 <a name="middleware" />
 
-### middleware( [numPathComponents, userId, permissions] )
+### middleware( [numPathComponents, userId, permissions, isKoa, koaErrorHandler] )
 
-Middleware for express.
+Middleware for express/koa.
 
 To create a custom getter for userId, pass a function(req, res) which returns the userId when called (must not be async).
 
@@ -486,6 +488,8 @@ __Arguments__
     numPathComponents {Number} number of components in the url to be considered part of the resource name.
     userId            {String|Number|Function} the user id for the acl system (defaults to req.session.userId)
     permissions       {String|Array} the permission(s) to check for (defaults to req.method.toLowerCase())
+    isKoa             {Boolean} is used in KOA
+    koaErrorHandler   {Function} error handler when is used in KOA, arguments: (err, ctx, next)
 ```
 
 ---------------------------------------
