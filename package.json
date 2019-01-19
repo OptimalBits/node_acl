@@ -22,8 +22,8 @@
     "redis": "^2.2.5"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "chai": "^3.4.0"
+    "chai": "^3.4.0",
+    "mocha": "^5.2.0"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
