@@ -1,5 +1,5 @@
 {
-  "name": "acl",
+  "name": "acl-fork",
   "version": "0.4.12",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
