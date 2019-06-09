@@ -14,7 +14,6 @@ describe('MongoDB - Default', function () {
         done()
       })
     })
-
   })
 
   run()
