@@ -1,18 +1,20 @@
 var Acl = require('../')
   , tests = require('./tests')
   , backendTests = require('./backendtests');
+const MongoClient = require('mongodb').MongoClient;
 
 describe('MongoDB - Default', function () {
   before(function (done) {
-    var self = this
-      , mongodb = require('mongodb')
+    var self = this;
 
-    mongodb.connect('mongodb://localhost:27017/acltest',function(error, db) {
+    MongoClient.connect('mongodb://localhost:27017',(err,client) => {
+      const db = client.db('acltest');
       db.dropDatabase(function () {
         self.backend = new Acl.mongodbBackend(db, "acl")
         done()
       })
     })
+
   })
 
   run()
@@ -21,12 +23,12 @@ describe('MongoDB - Default', function () {
 
 describe('MongoDB - useSingle', function () {
   before(function (done) {
-    var self = this
-      , mongodb = require('mongodb')
+    var self = this;
 
-    mongodb.connect('mongodb://localhost:27017/acltest',function(error, db) {
+    MongoClient.connect('mongodb://localhost:27017',(err,client) => {
+      const db = client.db('acltest');
       db.dropDatabase(function () {
-        self.backend = new Acl.mongodbBackend(db, "acl", true)
+        self.backend = new Acl.mongodbBackend(db, "acl")
         done()
       })
     })
@@ -41,7 +43,7 @@ describe('Redis', function () {
       , options = {
           host: '127.0.0.1',
           port: 6379,
-          password: null
+          password: process.env.REDIS_PASSWORD || 'admin'
         }
       , Redis = require('redis')
 
