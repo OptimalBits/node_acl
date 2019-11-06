@@ -9,3 +9,7 @@ node_js:
 services:
   - redis-server
   - mongodb
+
+install:
+  - npm install
+  - npm install redis mongo
