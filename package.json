@@ -28,5 +28,6 @@
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
     "cover": "istanbul cover -- _mocha test/runner.js --reporter spec"
-  }
+  },
+  "license": "MIT"
 }
