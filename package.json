@@ -7,9 +7,9 @@
     "acl",
     "web"
   ],
-  "repository": "git://github.com/optimalbits/node_acl.git",
-  "author": "Manuel Astudillo <manuel@optimalbits.com>",
-  "homepage": "https://github.com/optimalbits/node_acl",
+  "repository": "git@github.com:akshay9502/node_acl.git",
+  "author": "Akshay Sharma <akshay@kiot.io>",
+  "homepage": "https://github.com/akshay9502/node_acl",
   "engines": {
     "node": ">= 0.10"
   },
