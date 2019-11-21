@@ -1,15 +1,15 @@
 {
-  "name": "acl",
-  "version": "0.4.11",
+  "name": "kiot-acl",
+  "version": "1.0.1",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
     "middleware",
     "acl",
     "web"
   ],
-  "repository": "git://github.com/optimalbits/node_acl.git",
-  "author": "Manuel Astudillo <manuel@optimalbits.com>",
-  "homepage": "https://github.com/optimalbits/node_acl",
+  "repository": "git@github.com:akshay9502/node_acl.git",
+  "author": "Akshay Sharma <akshay@kiot.io>",
+  "homepage": "https://github.com/akshay9502/node_acl",
   "engines": {
     "node": ">= 0.10"
   },
@@ -18,12 +18,12 @@
     "async": "^2.1.4",
     "bluebird": "^3.0.2",
     "lodash": "^4.17.3",
-    "mongodb": "^2.0.47",
+    "mongodb": "^3.3.4",
     "redis": "^2.2.5"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "chai": "^3.4.0"
+    "chai": "^3.4.0",
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
