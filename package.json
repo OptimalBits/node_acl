@@ -18,7 +18,7 @@
     "async": "^2.1.4",
     "bluebird": "^3.0.2",
     "lodash": "^4.17.3",
-    "mongodb": "^2.0.47",
+    "mongodb": "^3.1.13",
     "redis": "^2.2.5"
   },
   "devDependencies": {
