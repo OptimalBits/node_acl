@@ -1,15 +1,15 @@
 {
-  "name": "acl",
-  "version": "0.4.11",
+  "name": "acl-vnedyalkov91",
+  "version": "0.4.9",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
     "middleware",
     "acl",
     "web"
   ],
-  "repository": "git://github.com/optimalbits/node_acl.git",
-  "author": "Manuel Astudillo <manuel@optimalbits.com>",
-  "homepage": "https://github.com/optimalbits/node_acl",
+  "repository": "git://github.com/vnedyalkov91/node_acl.git",
+  "author": "Vasil Nedyalkov <v91nedyalkov91@gmail.com>, Manuel Astudillo <manuel@optimalbits.com>",
+  "homepage": "https://github.com/vnedyalkov91/node_acl.git",
   "engines": {
     "node": ">= 0.10"
   },
