@@ -1,15 +1,64 @@
 name: CI
 on: [push, pull_request]
+
 jobs:
-  test:
+
+  test_memory:
     name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}, Redis ${{ matrix.redis-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['10', '12', '14']
-        mongodb-version: [3.6, 4.0, 4.2]
+        node: ['8', '10', '12', '14']
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Node.js v${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: npm install
+
+      - run: npm run test_memory
+        env:
+          CI: true
+
+  test_redis:
+    name: Node ${{ matrix.node }}, Redis ${{ matrix.redis-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: ['8', '10', '12', '14']
         redis-version: [4, 5, 6]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Node.js v${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Start Redis v${{ matrix.redis-version }}
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+
+      - run: npm install
+
+      - run: npm run test_redis
+        env:
+          CI: true
+
+  test_mongo:
+    name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}. Multi collection (default)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: ['8', '10', '12', '14']
+        mongodb-version: [3.6, 4.0, 4.2]
     steps:
       - uses: actions/checkout@v1
 
@@ -23,13 +72,35 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
-      - name: Start Redis v${{ matrix.redis-version }}
-        uses: supercharge/redis-github-action@1.1.0
+      - run: npm install
+
+      - run: npm run test_mongo
+        env:
+          CI: true
+
+  test_mongo_single:
+    name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}. Single collection
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: ['8', '10', '12', '14']
+        mongodb-version: [3.6, 4.0, 4.2]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Node.js v${{ matrix.node }}
+        uses: actions/setup-node@v1
         with:
-          redis-version: ${{ matrix.redis-version }}
+          node-version: ${{ matrix.node }}
+
+      - name: Start MongoDB v${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.2.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
 
       - run: npm install
 
-      - run: npm test
+      - run: npm run test_mongo_single
         env:
           CI: true
