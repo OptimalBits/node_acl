@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
 
   test_memory:
-    name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}, Redis ${{ matrix.redis-version }}
+    name: Node ${{ matrix.node }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
