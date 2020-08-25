@@ -1,32 +1,52 @@
 {
   "name": "acl",
-  "version": "0.4.11",
+  "version": "1.0.0",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
     "middleware",
     "acl",
     "web"
   ],
-  "repository": "git://github.com/optimalbits/node_acl.git",
+  "repository": "git://github.com/flash-oss/node_acl.git",
   "author": "Manuel Astudillo <manuel@optimalbits.com>",
-  "homepage": "https://github.com/optimalbits/node_acl",
+  "homepage": "https://github.com/flash-oss/node_acl",
   "engines": {
-    "node": ">= 0.10"
+    "node": ">= 10"
   },
   "main": "./index.js",
   "dependencies": {
     "async": "^2.1.4",
     "bluebird": "^3.0.2",
-    "lodash": "^4.17.3",
-    "mongodb": "^2.0.47",
-    "redis": "^2.2.5"
+    "lodash": "^4.17.3"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "chai": "^3.4.0"
+    "chai": "^4.2.0",
+    "eslint": "^7.7.0",
+    "mocha": "^8.1.1",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.0"
+  },
+  "optionalDependencies": {
+    "mongodb": "^3.0.0",
+    "redis": "^2.2.5"
   },
   "scripts": {
-    "test": "mocha test/runner.js --reporter spec",
-    "cover": "istanbul cover -- _mocha test/runner.js --reporter spec"
+    "test": "npm run test_memory && npm run test_redis && npm run test_mongo && npm run test_mongo_single",
+    "test_memory": "ACL_BACKEND=memory mocha",
+    "test_redis": "ACL_BACKEND=redis mocha",
+    "test_mongo": "ACL_BACKEND=mongo mocha",
+    "test_mongo_single": "ACL_BACKEND=mongo_single mocha",
+    "cover": "nyc npm run test"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2019
+    },
+    "env": {
+      "es6": true,
+      "node": true,
+      "mocha": true
+    },
+    "extends": "eslint:recommended"
   }
 }
