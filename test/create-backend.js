@@ -16,7 +16,7 @@ module.exports = async function createBackend(backendType) {
             no_ready_check: true,
         });
 
-        return new Acl.redisBackend(redis);
+        return new Acl.redisBackend({ redis });
     }
 
     if (backendType === "mongo") {

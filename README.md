@@ -2,7 +2,7 @@
 
 This module provides a minimalistic ACL implementation inspired by Zend_ACL.
 
-When you develop a web site or application you will soon notice that sessions are not enough to protect all the
+When you develop a website or application you will soon notice that sessions are not enough to protect all the
 available resources. Avoiding that malicious users access other users content proves a much more
 complicated task than anticipated. ACL can solve this problem in a flexible and elegant way.
 
@@ -12,13 +12,7 @@ for admin kind of functionality.
 
 A Redis, MongoDB and In-Memory based backends are provided built-in in the module. There are other third party backends such as [_knex_](https://github.com/christophertrudel/node_acl_knex) based, [_firebase_](https://github.com/tonila/node_acl_firebase) and [_elasticsearch_](https://github.com/adnanesaghir/acl-elasticsearch-backend). There is also an alternative memory backend that supports [_regexps_](https://github.com/futurechan/node_acl-mem-regexp).
 
-Follow [manast](http://twitter.com/manast) for news and updates regarding this library.
-
-## Status
-
-[![BuildStatus](https://secure.travis-ci.org/OptimalBits/node_acl.png?branch=master)](http://travis-ci.org/OptimalBits/node_acl)
-[![Dependency Status](https://david-dm.org/OptimalBits/node_acl.svg)](https://david-dm.org/OptimalBits/node_acl)
-[![devDependency Status](https://david-dm.org/OptimalBits/node_acl/dev-status.svg)](https://david-dm.org/OptimalBits/node_acl#info=devDependencies)
+Forked and improved from https://github.com/OptimalBits/node_acl
 
 ## Features
 
@@ -33,8 +27,8 @@ Follow [manast](http://twitter.com/manast) for news and updates regarding this l
 
 Using npm:
 
-```javascript
-npm install acl
+```shell script
+npm install acl2
 ```
 
 ## Documentation
@@ -62,17 +56,19 @@ npm install acl
 Create your acl module by requiring it and instantiating it with a valid backend instance:
 
 ```javascript
-var acl = require("acl");
+var ACL = require("acl2");
 
-// Using redis backend
-acl = new acl(new acl.redisBackend(redisClient, prefix));
+// Using Redis backend
+acl = new ACL(new ACL.redisBackend({ client: redisClient }));
 
 // Or Using the memory backend
-acl = new acl(new acl.memoryBackend());
+acl = new ACL(new ACL.memoryBackend());
 
-// Or Using the mongodb backend
-acl = new acl(new acl.mongodbBackend(dbInstance, prefix));
+// Or Using the MongoDB backend
+acl = new ACL(new ACL.mongodbBackend({ client: mongoClient }));
 ```
+
+See below for full list of backend constructor arguments. 
 
 All the following functions return a promise or optionally take a callback with
 an err parameter as last parameter. We omit them in the examples for simplicity.
@@ -493,44 +489,60 @@ To create a custom getter for userId, pass a function(req, res) which returns th
 
 <a name="backend" />
 
-### backend( db, [prefix] )
+### mongodbBackend
 
-Creates a backend instance. All backends except Memory require driver or database instance. `useSingle` is only applicable to the MongoDB backend.
+Creates a MongoDB backend instance.
 
 **Arguments**
 
 ```javascript
-    db        {Object} Database instance
-    prefix    {String} Optional collection prefix
-    useSingle     {Boolean} Create one collection for all resources (defaults to false)
+    client    {Object} MongoClient instance. If missing, the `db` will be used. 
+    db        {Object} Database instance. If missing, the `client` will be used.
+    prefix    {String} Optional collection prefix. Default is "acl_".
+    logger    {Object} Used for debugging purposes.
+    useSingle {Boolean} Create one collection for all resources (defaults to false)
 ```
+
+Example:
 
 ```javascript
-var mongodb = require("mongodb");
-mongodb.connect("mongodb://127.0.0.1:27017/acltest", function (error, db) {
-  var mongoBackend = new acl.mongodbBackend(db, "acl_");
-});
+const client = await require("mongodb").connect("mongodb://127.0.0.1:27017/acl_test");
+const ACL = require("acl2");
+const acl = new ACL(new ACL.mongodbBackend({ client, useSingle: true, logger: console }));
 ```
 
-Creates a new MongoDB backend using database instance `db`.
+### redisBackend
+
+Creates a Redis backend instance.
+
+**Arguments**
 
 ```javascript
-var client = require("redis").createClient(6379, "127.0.0.1", {
-  no_ready_check: true,
-});
-var redisBackend = new acl.redisBackend(client);
+    client    {Object} Redis client instance. 
+    prefix    {String} Optional prefix. Default is "acl_".
 ```
 
-Creates a new Redis backend using Redis client `client`.
+Example:
+
+```javascript
+var client = require("redis").createClient(6379, "127.0.0.1", { no_ready_check: true });
+const ACL = require("acl2");
+const acl = new ACL(new acl.redisBackend({ client, prefix: "my_acl_prefix_" }));
+```
 
 ## Tests
 
-Run tests with `npm` (requires mocha):
+Run tests with `npm`. Requires both local databases running - MongoDB and Redis.
 
-```javascript
+```shell script
  npm test
 ```
 
-## Future work
+You can run tests for Memory, Redis, or MongoDB only like this:
 
-- Support for denials (deny a role a given permission)
+```shell script
+npm run test_memory
+npm run test_redis
+npm run test_mongo
+npm run test_mongo_single
+``` 
