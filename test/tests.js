@@ -57,7 +57,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("guest", "blogs", "view", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -66,7 +66,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("guest", "forums", "view", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -75,7 +75,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("member", "blogs", ["edit", "view", "delete"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -86,16 +86,16 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles("joed", "guest", function (err) {
-                assert(!err);
+                assert.ifError(err);
 
                 acl.addUserRoles("jsmith", "member", function (err) {
-                    assert(!err);
+                    assert.ifError(err);
 
                     acl.addUserRoles("harry", "admin", function (err) {
-                        assert(!err);
+                        assert.ifError(err);
 
                         acl.addUserRoles("test@test.com", "member", function (err) {
-                            assert(!err);
+                            assert.ifError(err);
                             done();
                         });
                     });
@@ -107,13 +107,13 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles(0, "guest", function (err) {
-                assert(!err);
+                assert.ifError(err);
 
                 acl.addUserRoles(1, "member", function (err) {
-                    assert(!err);
+                    assert.ifError(err);
 
                     acl.addUserRoles(2, "admin", function (err) {
-                        assert(!err);
+                        assert.ifError(err);
                         done();
                     });
                 });
@@ -168,7 +168,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("admin", "users", ["add", "edit", "view", "delete"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -177,7 +177,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("foo", "blogs", ["edit", "view"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -186,7 +186,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("bar", "blogs", ["view", "delete"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -197,7 +197,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addRoleParents("baz", ["foo", "bar"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -208,7 +208,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles("james", "baz", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -216,7 +216,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles(3, "baz", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -227,7 +227,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.allow("admin", ["blogs", "forums"], "*", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -255,7 +255,7 @@ describe("acl", () => {
                     },
                 ],
                 function (err) {
-                    assert(!err);
+                    assert.ifError(err);
                     done();
                 }
             );
@@ -266,14 +266,14 @@ describe("acl", () => {
         it("do it", function (done) {
             var acl = new Acl(backend);
             acl.addUserRoles("suzanne", "fumanchu", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
         it("do it (numeric userId)", function (done) {
             var acl = new Acl(backend);
             acl.addUserRoles(4, "fumanchu", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -285,7 +285,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("joed", "blogs", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -295,7 +295,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(0, "blogs", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -305,7 +305,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("joed", "forums", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -315,7 +315,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(0, "forums", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -325,7 +325,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("joed", "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -335,7 +335,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(0, "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -345,7 +345,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("jsmith", "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -355,7 +355,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("jsmith", "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -365,7 +365,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("jsmith", "blogs", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -375,7 +375,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("test@test.com", "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -385,7 +385,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("test@test.com", "forums", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -395,7 +395,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("test@test.com", "blogs", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -405,7 +405,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(1, "blogs", "edit", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -415,7 +415,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("jsmith", "blogs", ["edit", "view", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -425,7 +425,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("test@test.com", "blogs", ["edit", "view", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -435,7 +435,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(1, "blogs", ["edit", "view", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -445,7 +445,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("jsmith", "blogs", ["edit", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -455,7 +455,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("test@test.com", "blogs", ["edit", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -465,7 +465,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(1, "blogs", ["edit", "clone"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -475,7 +475,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("james", "blogs", "add", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -485,7 +485,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(3, "blogs", "add", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -495,7 +495,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("suzanne", "blogs", "add", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -505,7 +505,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(4, "blogs", "add", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -515,7 +515,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("suzanne", "blogs", "get", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -525,7 +525,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(4, "blogs", "get", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -535,7 +535,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("suzanne", "news", ["put", "delete"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -545,7 +545,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(4, "news", ["put", "delete"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -555,7 +555,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("suzanne", "forums", ["put", "delete"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -565,7 +565,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed(4, "forums", ["put", "delete"], function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(allow);
                     done();
                 });
@@ -575,7 +575,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("nobody", "blogs", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -585,7 +585,7 @@ describe("acl", () => {
                 var acl = new Acl(backend);
 
                 acl.isAllowed("nobody", "nothing", "view", function (err, allow) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(!allow);
                     done();
                 });
@@ -596,7 +596,7 @@ describe("acl", () => {
             it("What permissions has james over blogs and forums?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions("james", ["blogs", "forums"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
 
                     assert.property(permissions, "blogs");
                     assert.property(permissions, "forums");
@@ -613,7 +613,7 @@ describe("acl", () => {
             it("What permissions has userId=3 over blogs and forums?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions(3, ["blogs", "forums"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
 
                     assert.property(permissions, "blogs");
                     assert.property(permissions, "forums");
@@ -630,7 +630,7 @@ describe("acl", () => {
             it("What permissions has nonsenseUser over blogs and forums?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions("nonsense", ["blogs", "forums"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
 
                     assert(permissions.forums.length === 0);
                     assert(permissions.blogs.length === 0);
@@ -702,7 +702,7 @@ describe("acl", () => {
         it("Remove get permissions from resources blogs and forums from role fumanchu", function (done) {
             var acl = new Acl(backend);
             acl.removeAllow("fumanchu", ["blogs", "forums"], "get", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -710,7 +710,7 @@ describe("acl", () => {
         it("Remove delete and put permissions from resource news from role fumanchu", function (done) {
             var acl = new Acl(backend);
             acl.removeAllow("fumanchu", "news", "delete", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -718,7 +718,7 @@ describe("acl", () => {
         it("Remove view permissions from resource blogs from role bar", function (done) {
             var acl = new Acl(backend);
             acl.removeAllow("bar", "blogs", "view", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -748,7 +748,7 @@ describe("acl", () => {
         it("Remove role fumanchu", function (done) {
             var acl = new Acl(backend);
             acl.removeRole("fumanchu", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -756,7 +756,7 @@ describe("acl", () => {
         it("Remove role member", function (done) {
             var acl = new Acl(backend);
             acl.removeRole("member", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -764,7 +764,7 @@ describe("acl", () => {
         it("Remove role foo", function (done) {
             var acl = new Acl(backend);
             acl.removeRole("foo", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -774,7 +774,7 @@ describe("acl", () => {
         it('What resources have "fumanchu" some rights on after removed?', function (done) {
             var acl = new Acl(backend);
             acl.whatResources("fumanchu", function (err, resources) {
-                assert(!err);
+                assert.ifError(err);
                 assert(Object.keys(resources).length === 0);
                 done();
             });
@@ -783,7 +783,7 @@ describe("acl", () => {
         it('What resources have "member" some rights on after removed?', function (done) {
             var acl = new Acl(backend);
             acl.whatResources("member", function (err, resources) {
-                assert(!err);
+                assert.ifError(err);
                 assert(Object.keys(resources).length === 0);
                 done();
             });
@@ -793,7 +793,7 @@ describe("acl", () => {
             it("What permissions has jsmith over blogs and forums?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions("jsmith", ["blogs", "forums"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(permissions.blogs.length === 0);
                     assert(permissions.forums.length === 0);
                     done();
@@ -803,7 +803,7 @@ describe("acl", () => {
             it("What permissions has test@test.com over blogs and forums?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions("test@test.com", ["blogs", "forums"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert(permissions.blogs.length === 0);
                     assert(permissions.forums.length === 0);
                     done();
@@ -813,7 +813,7 @@ describe("acl", () => {
             it("What permissions has james over blogs?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions("james", "blogs", function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert.property(permissions, "blogs");
                     assert.include(permissions.blogs, "delete");
                     done();
@@ -865,14 +865,14 @@ describe("acl", () => {
 
         it("Operation uses a callback when removing a specific parent role", function (done) {
             acl.removeRoleParents("child", "parentX", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
 
         it("Operation uses a callback when removing multiple specific parent roles", function (done) {
             acl.removeRoleParents("child", ["parentX", "parentY"], function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -956,7 +956,7 @@ describe("acl", () => {
 
         it("Operation uses a callback when removing all parent roles", function (done) {
             acl.removeRoleParents("child", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -966,7 +966,7 @@ describe("acl", () => {
         it("Remove resource blogs", function (done) {
             var acl = new Acl(backend);
             acl.removeResource("blogs", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -974,7 +974,7 @@ describe("acl", () => {
         it("Remove resource users", function (done) {
             var acl = new Acl(backend);
             acl.removeResource("users", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1004,7 +1004,7 @@ describe("acl", () => {
         it('What resources have "baz" some rights on after removed blogs?', function (done) {
             var acl = new Acl(backend);
             acl.whatResources("baz", function (err, resources) {
-                assert(!err);
+                assert.ifError(err);
                 assert.isObject(resources);
                 assert(Object.keys(resources).length === 0);
 
@@ -1015,7 +1015,7 @@ describe("acl", () => {
         it('What resources have "admin" some rights on after removed users resource?', function (done) {
             var acl = new Acl(backend);
             acl.whatResources("admin", function (err, resources) {
-                assert(!err);
+                assert.ifError(err);
                 assert.isFalse("users" in resources);
                 assert.isFalse("blogs" in resources);
 
@@ -1028,7 +1028,7 @@ describe("acl", () => {
         it("Remove role guest from joed", function (done) {
             var acl = new Acl(backend);
             acl.removeUserRoles("joed", "guest", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1036,14 +1036,14 @@ describe("acl", () => {
         it("Remove role guest from userId=0", function (done) {
             var acl = new Acl(backend);
             acl.removeUserRoles(0, "guest", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
         it("Remove role admin from harry", function (done) {
             var acl = new Acl(backend);
             acl.removeUserRoles("harry", "admin", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1051,7 +1051,7 @@ describe("acl", () => {
         it("Remove role admin from userId=2", function (done) {
             var acl = new Acl(backend);
             acl.removeUserRoles(2, "admin", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1061,7 +1061,7 @@ describe("acl", () => {
         it("What permissions has harry over forums and blogs?", function (done) {
             var acl = new Acl(backend);
             acl.allowedPermissions("harry", ["forums", "blogs"], function (err, permissions) {
-                assert(!err);
+                assert.ifError(err);
                 assert.isObject(permissions);
                 assert(permissions.forums.length === 0);
                 done();
@@ -1069,7 +1069,7 @@ describe("acl", () => {
             it("What permissions has userId=2 over forums and blogs?", function (done) {
                 var acl = new Acl(backend);
                 acl.allowedPermissions(2, ["forums", "blogs"], function (err, permissions) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert.isObject(permissions);
                     assert(permissions.forums.length === 0);
                     done();
@@ -1123,7 +1123,7 @@ describe("acl", () => {
             acl.allow(["role1", "role2", "role3"], ["res1", "res2", "res3"], ["perm1", "perm2", "perm3"], function (
                 err
             ) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1132,10 +1132,10 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles("user1", "role1", function (err) {
-                assert(!err);
+                assert.ifError(err);
 
                 acl.addRoleParents("role1", "parentRole1", function (err) {
-                    assert(!err);
+                    assert.ifError(err);
                     done();
                 });
             });
@@ -1145,10 +1145,10 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.addUserRoles(1, "role1", function (err) {
-                assert(!err);
+                assert.ifError(err);
 
                 acl.addRoleParents("role1", "parentRole1", function (err) {
-                    assert(!err);
+                    assert.ifError(err);
                     done();
                 });
             });
@@ -1158,11 +1158,11 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.whatResources("role1", function (err, res) {
-                assert(!err);
+                assert.ifError(err);
                 assert.deepEqual(res.res1.sort(), ["perm1", "perm2", "perm3"]);
 
                 acl.whatResources("role2", function (err, res) {
-                    assert(!err);
+                    assert.ifError(err);
                     assert.deepEqual(res.res1.sort(), ["perm1", "perm2", "perm3"]);
                     done();
                 });
@@ -1173,7 +1173,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.removeRole("role1", function (err) {
-                assert(!err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -1182,7 +1182,7 @@ describe("acl", () => {
             var acl = new Acl(backend);
 
             acl.removeRole("role1", function (err) {
-                assert(!err);
+                assert.ifError(err);
 
                 acl.whatResources("role1", function (err, res) {
                     assert(Object.keys(res).length === 0);

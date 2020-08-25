@@ -22,11 +22,11 @@ describe("unions", function () {
 
                 backend.clean(function () {
                     var transaction = backend.begin();
-                    Object.keys(testData).forEach(function (key) {
-                        buckets.forEach(function (bucket) {
+                    for (const key of Object.keys(testData)) {
+                        for (const bucket of buckets) {
                             backend.add(transaction, bucket, key, testData[key]);
-                        });
-                    });
+                        }
+                    }
                     backend.end(transaction, done);
                 });
             })
