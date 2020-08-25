@@ -2,7 +2,7 @@ name: CI
 on: [push, pull_request]
 jobs:
   test:
-    name: Test with Node.js v${{ matrix.node }} and ${{ matrix.os }}
+    name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}, Redis ${{ matrix.redis-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
