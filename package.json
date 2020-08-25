@@ -11,6 +11,7 @@
   "repository": "git://github.com/flash-oss/node_acl.git",
   "author": "Manuel Astudillo <manuel@optimalbits.com>",
   "homepage": "https://github.com/flash-oss/node_acl",
+  "license": "MIT",
   "engines": {
     "node": ">= 10"
   },
