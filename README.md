@@ -50,7 +50,7 @@ new ACL.redisBackend({ redis, prefix = "acl_" })
 * Made unit test debuggable, split them by backend type
 * MongoDB backend accepts either `client` or `db` [objects](https://github.com/mongodb/node-mongodb-native/blob/3.0/CHANGES_3.0.0.md)
 * Removed all possible warnings
-* Run tests using multiple MongoDB versions.
+* Run CI tests using multiple MongoDB versions.
 
 ### 
 
@@ -539,7 +539,6 @@ Creates a MongoDB backend instance.
     client    {Object} MongoClient instance. If missing, the `db` will be used. 
     db        {Object} Database instance. If missing, the `client` will be used.
     prefix    {String} Optional collection prefix. Default is "acl_".
-    logger    {Object} Used for debugging purposes.
     useSingle {Boolean} Create one collection for all resources (defaults to false)
 ```
 
@@ -548,7 +547,7 @@ Example:
 ```javascript
 const client = await require("mongodb").connect("mongodb://127.0.0.1:27017/acl_test");
 const ACL = require("acl2");
-const acl = new ACL(new ACL.mongodbBackend({ client, useSingle: true, logger: console }));
+const acl = new ACL(new ACL.mongodbBackend({ client, useSingle: true }));
 ```
 
 ### redisBackend
