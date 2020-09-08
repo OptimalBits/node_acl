@@ -12,7 +12,47 @@ for admin kind of functionality.
 
 A Redis, MongoDB and In-Memory based backends are provided built-in in the module. There are other third party backends such as [_knex_](https://github.com/christophertrudel/node_acl_knex) based, [_firebase_](https://github.com/tonila/node_acl_firebase) and [_elasticsearch_](https://github.com/adnanesaghir/acl-elasticsearch-backend). There is also an alternative memory backend that supports [_regexps_](https://github.com/futurechan/node_acl-mem-regexp).
 
-Forked and improved from https://github.com/OptimalBits/node_acl
+**Forked, improved and renamed from [`acl`](https://github.com/OptimalBits/node_acl) to [`acl2`](https://www.npmjs.com/package/acl2)**
+
+### Breaking changes comparing to the original `acl`
+
+* The backend constructors take options object instead of multiple argument.
+
+Original `acl`:
+```js
+new ACL.mongodbBackend(db, prefix, useSingle, useRawCollectionNames)
+new ACL.redisBackend(redis, prefix)
+```
+
+New `acl2`:
+```js
+new ACL.mongodbBackend({ client, db, prefix = "acl_", useSingle, useRawCollectionNames })
+new ACL.redisBackend({ redis, prefix = "acl_" })
+```
+
+* The new default `"acl_"` prefix for both Redis and MongoDB.
+
+* The `mongodb` dependency upgraded from v2 to the latest v3.
+
+* Both `mongodb` and `redis`  dependencies moved to `optionalDependencies`
+
+* The minimal supported nodejs version was `0.10`, but became the current LTS `10`
+
+* The first published version of `acl2` is `1.0` to be more SemVer compliant.
+
+### Other notable changes comparing to the original `acl`
+
+* ES6
+* ESLint
+* Prettier
+* Internally use more promises, fewer callbacks for better stack traces
+* Upgraded all possible dependencies
+* Made unit test debuggable, split them by backend type
+* MongoDB backend accepts either `client` or `db` [objects](https://github.com/mongodb/node-mongodb-native/blob/3.0/CHANGES_3.0.0.md)
+* Removed all possible warnings
+* Run tests using multiple MongoDB versions.
+
+### 
 
 ## Features
 
