@@ -40,6 +40,10 @@
     "test_mongo_single": "ACL_BACKEND=mongo_single mocha",
     "cover": "nyc npm run test"
   },
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "eslintConfig": {
     "parserOptions": {
       "ecmaVersion": 2019
