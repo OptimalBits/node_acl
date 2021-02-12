@@ -34,9 +34,9 @@ new ACL.redisBackend({ redis, prefix = "acl_" })
 
 * The `mongodb` dependency upgraded from v2 to the latest v3.
 
-* Both `mongodb` and `redis`  dependencies moved to `optionalDependencies`
+* Both `mongodb` and `redis` dependencies moved to `devDependencies`. You have to install them to your project separately.
 
-* The minimal supported nodejs version was `0.10`, but became the current LTS `10`
+* The minimal supported nodejs version was `0.10`, but became the current LTS `10`. But, `acl2` runs fine on node `8`.
 
 * The first published version of `acl2` is `1.0` to be more SemVer compliant.
 
@@ -69,6 +69,14 @@ Using npm:
 
 ```shell script
 npm install acl2
+```
+
+Optionally: 
+
+```shell script
+npm install mongodb@3
+
+npm install redis@2
 ```
 
 ## Documentation

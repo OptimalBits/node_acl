@@ -25,11 +25,9 @@
     "chai": "^4.2.0",
     "eslint": "^7.7.0",
     "mocha": "^8.1.1",
-    "nyc": "^15.1.0",
-    "prettier": "^2.1.0"
-  },
-  "optionalDependencies": {
     "mongodb": "^3.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.0",
     "redis": "^2.2.5"
   },
   "scripts": {
