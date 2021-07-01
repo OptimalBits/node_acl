@@ -1,7 +1,7 @@
 {
-  "name": "acl",
-  "version": "0.4.11",
-  "description": "An Access Control List module, based on Redis with Express middleware support",
+  "name": "acl-express_koa",
+  "version": "0.4.16",
+  "description": "An Access Control List module, based on Redis with Express/KOA middleware support",
   "keywords": [
     "middleware",
     "acl",
@@ -18,7 +18,7 @@
     "async": "^2.1.4",
     "bluebird": "^3.0.2",
     "lodash": "^4.17.3",
-    "mongodb": "^2.0.47",
+    "mongodb": "^3.5.7",
     "redis": "^2.2.5"
   },
   "devDependencies": {
