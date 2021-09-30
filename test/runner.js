@@ -5,11 +5,12 @@ var Acl = require('../')
 describe('MongoDB - Default', function () {
   before(function (done) {
     var self = this
-      , mongodb = require('mongodb')
+      , { MongoClient }  = require('mongodb')
 
-    mongodb.connect('mongodb://localhost:27017/acltest',function(error, db) {
-      db.dropDatabase(function () {
-        self.backend = new Acl.mongodbBackend(db, "acl")
+    var client = new MongoClient('mongodb://localhost:27017/acltest')
+    client.connect(function(error, client) {
+      client.db('acltest').dropDatabase(function () {
+        self.backend = new Acl.mongodbBackend(client, "acl")
         done()
       })
     })
@@ -22,11 +23,12 @@ describe('MongoDB - Default', function () {
 describe('MongoDB - useSingle', function () {
   before(function (done) {
     var self = this
-      , mongodb = require('mongodb')
+      , { MongoClient } = require('mongodb')
 
-    mongodb.connect('mongodb://localhost:27017/acltest',function(error, db) {
-      db.dropDatabase(function () {
-        self.backend = new Acl.mongodbBackend(db, "acl", true)
+    var client = new MongoClient('mongodb://localhost:27017/acltest')
+    client.connect(function(error, client) {
+      client.db('acltest').dropDatabase(function () {
+        self.backend = new Acl.mongodbBackend(client, "acl", true)
         done()
       })
     })

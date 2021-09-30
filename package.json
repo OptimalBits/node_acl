@@ -1,5 +1,5 @@
 {
-  "name": "acl-vnedyalkov91",
+  "name": "acl-node",
   "version": "0.4.9",
   "description": "An Access Control List module, based on Redis with Express middleware support",
   "keywords": [
@@ -17,13 +17,13 @@
   "dependencies": {
     "async": "^2.1.4",
     "bluebird": "^3.0.2",
-    "lodash": "^4.17.3",
-    "mongodb": "^3.5.9",
-    "redis": "^2.2.5"
+    "lodash": "^4.17.21",
+    "mongodb": "^4.1.2",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "chai": "^3.4.0"
+    "chai": "^3.4.0",
+    "mocha": "^9.1.2"
   },
   "scripts": {
     "test": "mocha test/runner.js --reporter spec",
