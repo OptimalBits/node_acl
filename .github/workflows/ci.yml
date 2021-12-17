@@ -9,12 +9,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['10', '12', '14']
+        node: ['12', '14', '16']
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup Node.js v${{ matrix.node }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
@@ -30,13 +30,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['10', '12', '14']
+        node: ['12', '14', '16']
         redis-version: [4, 5, 6]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup Node.js v${{ matrix.node }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
@@ -57,13 +57,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['10', '12', '14']
-        mongodb-version: [3.6, 4.0, 4.2]
+        node: ['12', '14', '16']
+        mongodb-version: [4.0, 5.0]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup Node.js v${{ matrix.node }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
@@ -74,9 +74,10 @@ jobs:
 
       - run: npm install
 
+      - run: npm install mongodb@4
       - run: npm run test_mongo
-        env:
-          CI: true
+      - run: npm install mongodb@3
+      - run: npm run test_mongo
 
   test_mongo_single:
     name: Node ${{ matrix.node }}, MongoDB ${{ matrix.mongodb-version }}. Single collection
@@ -84,13 +85,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['10', '12', '14']
-        mongodb-version: [3.6, 4.0, 4.2]
+        node: ['12', '14', '16']
+        mongodb-version: [4.0, 5.0]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup Node.js v${{ matrix.node }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
@@ -101,6 +102,7 @@ jobs:
 
       - run: npm install
 
+      - run: npm install mongodb@4
       - run: npm run test_mongo_single
-        env:
-          CI: true
+      - run: npm install mongodb@3
+      - run: npm run test_mongo_single

@@ -32,11 +32,11 @@ new ACL.redisBackend({ redis, prefix = "acl_" })
 
 * The new default `"acl_"` prefix for both Redis and MongoDB.
 
-* The `mongodb` dependency upgraded from v2 to the latest v3.
+* The `mongodb` dependency upgraded from v2 to the latest v3 - v4.
 
 * Both `mongodb` and `redis` dependencies moved to `devDependencies`. You have to install them to your project separately.
 
-* The minimal supported nodejs version was `0.10`, but became the current LTS `10`. But, `acl2` runs fine on node `8`.
+* The minimal supported nodejs version was `0.10`, but became the current LTS `12`.
 
 * The first published version of `acl2` is `1.0` to be more SemVer compliant.
 
@@ -74,9 +74,9 @@ npm install acl2
 Optionally: 
 
 ```shell script
-npm install mongodb@3
+npm install mongodb
 
-npm install redis@2
+npm install redis
 ```
 
 ## Documentation
@@ -582,7 +582,7 @@ const acl = new ACL(new acl.redisBackend({ client, prefix: "my_acl_prefix_" }));
 Run tests with `npm`. Requires both local databases running - MongoDB and Redis.
 
 ```shell script
- npm test
+npm test
 ```
 
 You can run tests for Memory, Redis, or MongoDB only like this:

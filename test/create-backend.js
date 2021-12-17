@@ -20,13 +20,17 @@ module.exports = async function createBackend(backendType) {
     }
 
     if (backendType === "mongo") {
-        const client = await require("mongodb").connect("mongodb://localhost:27017/acl_test?useUnifiedTopology=true");
+        const { MongoClient } = await require("mongodb");
+        const client = await MongoClient.connect("mongodb://localhost:27017/acl_test?useUnifiedTopology=true");
+
         await client.db("acl_test").dropDatabase();
         return new Acl.mongodbBackend({ client, prefix: "acl_" });
     }
 
     if (backendType === "mongo_single") {
-        const client = await require("mongodb").connect("mongodb://localhost:27017/acl_test?useUnifiedTopology=true");
+        const { MongoClient } = await require("mongodb");
+        const client = await MongoClient.connect("mongodb://localhost:27017/acl_test?useUnifiedTopology=true");
+
         await client.db("acl_test").dropDatabase();
         return new Acl.mongodbBackend({ client, prefix: "acl_", useSingle: true });
     }

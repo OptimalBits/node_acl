@@ -13,7 +13,7 @@
   "homepage": "https://github.com/flash-oss/node_acl",
   "license": "MIT",
   "engines": {
-    "node": ">= 10"
+    "node": ">= 12.9"
   },
   "main": "./index.js",
   "dependencies": {
@@ -25,7 +25,7 @@
     "chai": "^4.2.0",
     "eslint": "^7.7.0",
     "mocha": "^8.1.1",
-    "mongodb": "^3.0.0",
+    "mongodb": "3 - 4",
     "nyc": "^15.1.0",
     "prettier": "^2.1.0",
     "redis": "^2.2.5"
