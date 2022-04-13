@@ -17,7 +17,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^3.2.3",
     "bluebird": "^3.0.2",
     "lodash": "^4.17.3"
   },
