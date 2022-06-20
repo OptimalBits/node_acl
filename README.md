@@ -375,6 +375,7 @@ Removes a role from the system.
 ---
 
 <a name="removeResource" />
+
 ### removeResource( resource, function(err) )
 
 Removes a resource from the system
