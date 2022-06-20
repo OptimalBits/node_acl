@@ -71,7 +71,7 @@ Using npm:
 npm install acl2
 ```
 
-Optionally: 
+Optionally:
 
 ```shell script
 npm install mongodb
@@ -116,7 +116,7 @@ acl = new ACL(new ACL.memoryBackend());
 acl = new ACL(new ACL.mongodbBackend({ client: mongoClient }));
 ```
 
-See below for full list of backend constructor arguments. 
+See below for full list of backend constructor arguments.
 
 All the following functions return a promise or optionally take a callback with
 an err parameter as last parameter. We omit them in the examples for simplicity.
@@ -545,7 +545,7 @@ Creates a MongoDB backend instance.
 **Arguments**
 
 ```javascript
-    client    {Object} MongoClient instance. If missing, the `db` will be used. 
+    client    {Object} MongoClient instance. If missing, the `db` will be used.
     db        {Object} Database instance. If missing, the `client` will be used.
     prefix    {String} Optional collection prefix. Default is "acl_".
     useSingle {Boolean} Create one collection for all resources (defaults to false)
@@ -566,7 +566,7 @@ Creates a Redis backend instance.
 **Arguments**
 
 ```javascript
-    client    {Object} Redis client instance. 
+    client    {Object} Redis client instance.
     prefix    {String} Optional prefix. Default is "acl_".
 ```
 
@@ -593,4 +593,4 @@ npm run test_memory
 npm run test_redis
 npm run test_mongo
 npm run test_mongo_single
-``` 
+```
