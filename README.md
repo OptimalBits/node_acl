@@ -52,8 +52,6 @@ new ACL.redisBackend({ redis, prefix = "acl_" })
 * Removed all possible warnings
 * Run CI tests using multiple MongoDB versions.
 
-### 
-
 ## Features
 
 - Users
